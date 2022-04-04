@@ -27,8 +27,14 @@ internal class JsonToSongResolver : SpotifyToSongResolver {
         try {
             serviceData?.getFirstItem()?.let { item ->
                 SpotifySong(
-                    item.getId(), item.getSongName(), item.getArtistName(), item.getAlbumName(),
-                    item.getReleaseDate(), item.getReleaseDatePrecision(), item.getSpotifyUrl(), item.getImageUrl()
+                    item.getId(),
+                    item.getSongName(),
+                    item.getArtistName(),
+                    item.getAlbumName(),
+                    item.getReleaseDate(),
+                    item.getReleaseDatePrecision(),
+                    item.getSpotifyUrl(),
+                    item.getImageUrl()
                 )
             }
         } catch (e: Exception) {
