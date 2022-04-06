@@ -1,6 +1,5 @@
 package ayds.newyork.songinfo.home.view
 
-import ayds.newyork.songinfo.home.model.DateFormatter
 import ayds.newyork.songinfo.home.model.entities.EmptySong
 import ayds.newyork.songinfo.home.model.entities.Song
 import ayds.newyork.songinfo.home.model.entities.SpotifySong
