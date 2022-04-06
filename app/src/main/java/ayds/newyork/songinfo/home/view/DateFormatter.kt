@@ -3,20 +3,27 @@ package ayds.newyork.songinfo.home.view
 import java.text.SimpleDateFormat
 import java.util.*
 
+private const val DAY_PRECISION = "day"
+private const val MONTH_PRECISION = "month"
+private const val YEAR_PRECISION = "year"
+private const val DEFAULT_RESULT = "N/A"
+private const val NEW_MONTH_FORMAT = "MMMM, yyyy"
+private const val NEW_DAY_FORMAT = "dd/MM/yyyy"
+
 class DateFormatter {
 
     companion object {
         fun getReleaseDate(date: String, precisionDate: String) =
             when (precisionDate) {
-                "day" -> getDayFormat(date)
-                "month" -> getMonthFormat(date)
-                "year" -> getYearFormat(date)
+                DAY_PRECISION -> getDayFormat(date)
+                MONTH_PRECISION -> getMonthFormat(date)
+                YEAR_PRECISION -> getYearFormat(date)
                 else -> ""
             }
 
 
         private fun getYearFormat(year: String): String {
-            var format = "N/A"
+            var format = DEFAULT_RESULT
             if (year.isNotEmpty()) {
                 format =
                     year + if (isLeapYear(year.toInt())) " (leap year)" else " (not a leap year)"
@@ -39,17 +46,13 @@ class DateFormatter {
 
         private fun getMonthFormat(date: String): String {
             val monthFormat = SimpleDateFormat("yyyy-MM", Locale.US)
-            val newMonthFormat = "MMMM, yyyy"
-
-            return applyFormat(monthFormat, newMonthFormat, date)
+            return applyFormat(monthFormat, NEW_MONTH_FORMAT, date)
         }
 
 
         private fun getDayFormat(date: String): String {
             val dayFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val newDayFormat = "dd/MM/yyyy"
-
-            return applyFormat(dayFormat, newDayFormat, date)
+            return applyFormat(dayFormat, NEW_DAY_FORMAT, date)
         }
 
         private fun applyFormat(
@@ -57,7 +60,7 @@ class DateFormatter {
             newDateFormat: String,
             date: String
         ): String {
-            var format = "N/A"
+            var format = DEFAULT_RESULT
             val releaseDate = dateFormat.parse(date)
 
             if (releaseDate != null) {
