@@ -12,14 +12,13 @@ private const val NEW_DAY_FORMAT = "dd/MM/yyyy"
 
 class DateFormatter {
 
-    companion object {
-        fun getReleaseDate(date: String, precisionDate: String) =
-            when (precisionDate) {
-                DAY_PRECISION -> getDayFormat(date)
-                MONTH_PRECISION -> getMonthFormat(date)
-                YEAR_PRECISION -> getYearFormat(date)
-                else -> ""
-            }
+    fun getReleaseDate(date: String, precisionDate: String) =
+        when (precisionDate) {
+            DAY_PRECISION -> getDayFormat(date)
+            MONTH_PRECISION -> getMonthFormat(date)
+            YEAR_PRECISION -> getYearFormat(date)
+            else -> ""
+        }
 
 
         private fun getYearFormat(year: String): String {
@@ -71,4 +70,4 @@ class DateFormatter {
             return format
         }
     }
-}
+

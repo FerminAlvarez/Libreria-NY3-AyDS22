@@ -5,7 +5,7 @@ import ayds.newyork.songinfo.home.model.HomeModelInjector
 
 object HomeViewInjector {
 
-    val songDescriptionHelper: SongDescriptionHelper = SongDescriptionHelperImpl()
+    val songDescriptionHelper: SongDescriptionHelper = SongDescriptionHelperImpl(DateFormatter())
 
     fun init(homeView: HomeView) {
         HomeModelInjector.initHomeModel(homeView)
