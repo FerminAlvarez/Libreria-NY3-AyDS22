@@ -2,6 +2,7 @@ package ayds.newyork.songinfo.home.model.repository.external.spotify.tracks
 
 import com.google.gson.Gson
 import ayds.newyork.songinfo.home.model.entities.SpotifySong
+import ayds.newyork.songinfo.home.model.repository.local.spotify.DatePrecision
 import com.google.gson.JsonObject
 
 interface SpotifyToSongResolver {
@@ -67,9 +68,9 @@ internal class JsonToSongResolver : SpotifyToSongResolver {
         return album[RELEASE_DATE].asString
     }
 
-    private fun JsonObject.getReleaseDatePrecision(): String {
+    private fun JsonObject.getReleaseDatePrecision(): DatePrecision {
         val album = this[ALBUM].asJsonObject
-        return album[RELEASE_DATE_PRECISION].asString
+        return DatePrecision.valueOf(album[RELEASE_DATE_PRECISION].asString.uppercase())
     }
 
     private fun JsonObject.getImageUrl(): String {

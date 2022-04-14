@@ -1,22 +1,20 @@
 package ayds.newyork.songinfo.home.view
 
+import ayds.newyork.songinfo.home.model.repository.local.spotify.DatePrecision
 import java.text.SimpleDateFormat
 import java.util.*
 
-private const val DAY_PRECISION = "day"
-private const val MONTH_PRECISION = "month"
-private const val YEAR_PRECISION = "year"
 private const val DEFAULT_RESULT = "N/A"
 private const val NEW_MONTH_FORMAT = "MMMM, yyyy"
 private const val NEW_DAY_FORMAT = "dd/MM/yyyy"
 
 class DateFormatter {
 
-    fun getReleaseDate(date: String, precisionDate: String) =
+    fun getReleaseDate(date: String, precisionDate: DatePrecision) =
         when (precisionDate) {
-            DAY_PRECISION -> getDayFormat(date)
-            MONTH_PRECISION -> getMonthFormat(date)
-            YEAR_PRECISION -> getYearFormat(date)
+            DatePrecision.DAY -> getDayFormat(date)
+            DatePrecision.MONTH -> getMonthFormat(date)
+            DatePrecision.YEAR -> getYearFormat(date)
             else -> ""
         }
 
