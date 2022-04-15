@@ -4,7 +4,6 @@ import ayds.newyork.songinfo.home.model.entities.EmptySong
 import ayds.newyork.songinfo.home.model.entities.Song
 import ayds.newyork.songinfo.home.model.entities.SpotifySong
 
-
 interface SongDescriptionHelper {
     fun getSongDescriptionText(song: Song = EmptySong): String
 }
