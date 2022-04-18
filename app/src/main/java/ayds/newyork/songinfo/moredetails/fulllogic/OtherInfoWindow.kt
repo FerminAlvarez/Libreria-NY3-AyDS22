@@ -19,9 +19,11 @@ import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import androidx.core.text.HtmlCompat
 import retrofit2.Response
 import java.io.IOException
 import java.lang.StringBuilder
+import java.util.*
 
 class OtherInfoWindow : AppCompatActivity() {
     private val logoNYT =
@@ -105,7 +107,7 @@ class OtherInfoWindow : AppCompatActivity() {
             val finalText = NYTinfo
             runOnUiThread {
                 Picasso.get().load(logoNYT).into(findViewById<View>(R.id.imageView) as ImageView)
-                NYTInfoPane!!.text = Html.fromHtml(finalText)
+                NYTInfoPane!!.text = HtmlCompat.fromHtml(finalText, HtmlCompat.FROM_HTML_MODE_LEGACY)
             }
         }.start()
     }
@@ -127,7 +129,7 @@ class OtherInfoWindow : AppCompatActivity() {
             val textWithBold = text
                 .replace("'", " ")
                 .replace("\n", "<br>")
-                .replace("(?i)" + term!!.toRegex(), "<b>" + term.toUpperCase() + "</b>")
+                .replace("(?i)" + term!!.toRegex(), "<b>" + term.uppercase() + "</b>")
             builder.append(textWithBold)
             builder.append("</font></div></html>")
             return builder.toString()
