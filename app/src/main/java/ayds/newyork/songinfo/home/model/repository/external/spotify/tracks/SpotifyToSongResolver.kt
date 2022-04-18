@@ -2,6 +2,7 @@ package ayds.newyork.songinfo.home.model.repository.external.spotify.tracks
 
 import com.google.gson.Gson
 import ayds.newyork.songinfo.home.model.entities.SpotifySong
+import ayds.newyork.songinfo.home.model.repository.local.spotify.DatePrecision
 import com.google.gson.JsonObject
 
 interface SpotifyToSongResolver {
@@ -16,18 +17,25 @@ private const val ARTISTS = "artists"
 private const val ALBUM = "album"
 private const val IMAGES = "images"
 private const val RELEASE_DATE = "release_date"
+private const val RELEASE_DATE_PRECISION = "release_date_precision"
 private const val URL = "url"
 private const val EXTERNAL_URL = "external_urls"
 private const val SPOTIFY = "spotify"
 
-internal class JsonToSongResolver : SpotifyToSongResolver {
+internal class JsonToSongResolver(private val spotifyToDatePrecisionMapper: SpotifyToDatePrecisionMapperImpl) : SpotifyToSongResolver {
 
     override fun getSongFromExternalData(serviceData: String?): SpotifySong? =
         try {
             serviceData?.getFirstItem()?.let { item ->
                 SpotifySong(
-                    item.getId(), item.getSongName(), item.getArtistName(), item.getAlbumName(),
-                    item.getReleaseDate(), item.getSpotifyUrl(), item.getImageUrl()
+                    item.getId(),
+                    item.getSongName(),
+                    item.getArtistName(),
+                    item.getAlbumName(),
+                    item.getReleaseDate(),
+                    item.getReleaseDatePrecision(),
+                    item.getSpotifyUrl(),
+                    item.getImageUrl()
                 )
             }
         } catch (e: Exception) {
@@ -58,6 +66,11 @@ internal class JsonToSongResolver : SpotifyToSongResolver {
     private fun JsonObject.getReleaseDate(): String {
         val album = this[ALBUM].asJsonObject
         return album[RELEASE_DATE].asString
+    }
+
+    private fun JsonObject.getReleaseDatePrecision(): DatePrecision {
+        val album = this[ALBUM].asJsonObject
+        return spotifyToDatePrecisionMapper.getDatePrecision(album[RELEASE_DATE_PRECISION].asString)
     }
 
     private fun JsonObject.getImageUrl(): String {
