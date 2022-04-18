@@ -2,20 +2,15 @@ package ayds.newyork.songinfo.moredetails.fulllogic
 
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
-import ayds.newyork.songinfo.moredetails.fulllogic.DataBase
 import android.os.Bundle
 import ayds.newyork.songinfo.R
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import ayds.newyork.songinfo.moredetails.fulllogic.NYTimesAPI
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.google.gson.JsonElement
-import ayds.newyork.songinfo.moredetails.fulllogic.OtherInfoWindow
 import android.content.Intent
 import android.net.Uri
 import com.squareup.picasso.Picasso
-import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -23,13 +18,13 @@ import androidx.core.text.HtmlCompat
 import retrofit2.Response
 import java.io.IOException
 import java.lang.StringBuilder
-import java.util.*
 
 class OtherInfoWindow : AppCompatActivity() {
     private val logoNYT =
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU"
     private var NYTInfoPane: TextView? = null
     private var dataBase: DataBase? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
@@ -74,26 +69,24 @@ class OtherInfoWindow : AppCompatActivity() {
                     val response = jobj["response"].asJsonObject
                     //TODO cambiar _abstract porque incluso el nombre es una palabra reservada
                     //_abstract es la información de la página, la que va debajo de la foto
-                    val _abstract = response["docs"].asJsonArray[0].asJsonObject["abstract"]
-                    val url = response["docs"].asJsonArray[0].asJsonObject["web_url"]
+                    val abstractNYT = response["docs"].asJsonArray[0].asJsonObject["abstract"]
+                    val urlNYT = response["docs"].asJsonArray[0].asJsonObject["web_url"]
 
                     //TODO Este text tendría que ser otra variable, no tiene que ver con lo que hace la anterior
                     //Este text es la información que devuelve NYT (debajo de la imagen)
-                    if (_abstract == null) {
+                    if (abstractNYT == null) {
                         NYTinfo = "No Results"
                     } else {
-                        NYTinfo = _abstract.asString.replace("\\n", "\n")
+                        NYTinfo = abstractNYT.asString.replace("\\n", "\n")
                         NYTinfo = textToHtml(NYTinfo, artistName)
-
-
                         // save to DB  <o/
                         DataBase.saveArtist(dataBase, artistName, NYTinfo)
                     }
-                    val urlString = url.asString
+                    val urlString = urlNYT.asString
                     findViewById<View>(R.id.openUrlButton).setOnClickListener {
                         val intent = Intent(Intent.ACTION_VIEW)
                         intent.data = Uri.parse(urlString)
-                        startActivity(intent)
+                        this.startActivity(intent)
                     }
                 } catch (e1: IOException) {
                     //TODO más logs
@@ -114,7 +107,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun open(artist: String?) {
         dataBase = DataBase(this)
-        DataBase.saveArtist(dataBase, "test", "sarasa")
+        DataBase.saveArtist(dataBase!!, "test", "sarasa")
         Log.e("TAG", "" + DataBase.getInfo(dataBase, "test"))
         Log.e("TAG", "" + DataBase.getInfo(dataBase, "nada"))
         getArtistInfo(artist)
