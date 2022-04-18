@@ -34,6 +34,13 @@ class OtherInfoWindow : AppCompatActivity() {
         open(intent.getStringExtra("artistName"))
     }
 
+    private fun open(artist: String?) {
+        dataBase = DataBase(this)
+        DataBase.saveArtist(dataBase, "test", "sarasa")
+        Log.e("TAG", "" + DataBase.getInfo(dataBase, "test"))
+        Log.e("TAG", "" + DataBase.getInfo(dataBase, "nada"))
+        getArtistInfo(artist)
+    }
     //TODO el método hace muchas cosas -> hay que dividirlo
     fun getArtistInfo(artistName: String?) {
 
@@ -105,24 +112,16 @@ class OtherInfoWindow : AppCompatActivity() {
         }.start()
     }
 
-    private fun open(artist: String?) {
-        dataBase = DataBase(this)
-        DataBase.saveArtist(dataBase!!, "test", "sarasa")
-        Log.e("TAG", "" + DataBase.getInfo(dataBase, "test"))
-        Log.e("TAG", "" + DataBase.getInfo(dataBase, "nada"))
-        getArtistInfo(artist)
-    }
-
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
-        fun textToHtml(text: String, term: String?): String {
+        fun textToHtml(NYTinfo: String, artistName: String?): String {
             val builder = StringBuilder()
             builder.append("<html><div width=400>")
             builder.append("<font face=\"arial\">")
-            val textWithBold = text
+            val textWithBold = NYTinfo
                 .replace("'", " ")
                 .replace("\n", "<br>")
-                .replace("(?i)" + term!!.toRegex(), "<b>" + term.uppercase() + "</b>")
+                .replace("(?i)" + artistName!!.toRegex(), "<b>" + artistName.uppercase() + "</b>")
             builder.append(textWithBold)
             builder.append("</font></div></html>")
             return builder.toString()
