@@ -112,19 +112,21 @@ class OtherInfoWindow : AppCompatActivity() {
         }.start()
     }
 
+    private fun textToHtml(NYTinfo: String, artistName: String?): String {
+        val builder = StringBuilder()
+        builder.append("<html><div width=400>")
+        builder.append("<font face=\"arial\">")
+        val textWithBold = NYTinfo
+            .replace("'", " ")
+            .replace("\n", "<br>")
+            .replace("(?i)" + artistName!!.toRegex(), "<b>" + artistName.uppercase() + "</b>")
+        builder.append(textWithBold)
+        builder.append("</font></div></html>")
+        return builder.toString()
+    }
+
     companion object {
+        //TODO ("Esta constante la usa la clase HomeView de forma estatica")
         const val ARTIST_NAME_EXTRA = "artistName"
-        fun textToHtml(NYTinfo: String, artistName: String?): String {
-            val builder = StringBuilder()
-            builder.append("<html><div width=400>")
-            builder.append("<font face=\"arial\">")
-            val textWithBold = NYTinfo
-                .replace("'", " ")
-                .replace("\n", "<br>")
-                .replace("(?i)" + artistName!!.toRegex(), "<b>" + artistName.uppercase() + "</b>")
-            builder.append(textWithBold)
-            builder.append("</font></div></html>")
-            return builder.toString()
-        }
     }
 }
