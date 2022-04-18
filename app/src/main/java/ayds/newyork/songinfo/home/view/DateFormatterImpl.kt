@@ -19,7 +19,7 @@ internal class DateFormatterImpl : DateFormatter{
             DatePrecision.DAY -> getDayFormat(date)
             DatePrecision.MONTH -> getMonthFormat(date)
             DatePrecision.YEAR -> getYearFormat(date)
-            else -> ""
+            else -> date
         }
 
     private fun getYearFormat(year: String): String {
