@@ -56,8 +56,12 @@ class DataBase(context: Context) : SQLiteOpenHelper(context, "dictionary.db", nu
                 db, ARTISTS_TABLE, projection, selection, selectionArgs, sortOrder
             )
             val items = getInfo(cursor)
-            cursor.close()
+            closeCursor(cursor)
             return if (items.isEmpty()) null else items[0]
+        }
+
+        private fun closeCursor(cursor: Cursor) {
+            cursor.close()
         }
 
         private fun createArtistProjection() = arrayOf(ID, ARTIST, INFO)
