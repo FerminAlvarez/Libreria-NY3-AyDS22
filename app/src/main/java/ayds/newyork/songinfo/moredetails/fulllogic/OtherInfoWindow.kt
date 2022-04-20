@@ -29,20 +29,19 @@ class OtherInfoWindow : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
 
-        //TODO'ed alto nombre textPane2 -> NYTInfoPane, tambien lo cambiamos en la activity.otherinfo.xml
         NYTInfoPane = findViewById(R.id.NYTInfoPane)
         open(intent.getStringExtra("artistName"))
     }
 
     private fun open(artist: String?) {
         dataBase = DataBase(this)
-        DataBase.saveArtist(dataBase, "test", "sarasa")
-        Log.e("TAG", "" + DataBase.getInfo(dataBase, "test"))
-        Log.e("TAG", "" + DataBase.getInfo(dataBase, "nada"))
-        getArtistInfo(artist)
+        DataBase.saveArtist(dataBase!!, "test", "sarasa")
+        Log.e("TAG", "" + DataBase.getInfo(dataBase!!, "test"))
+        Log.e("TAG", "" + DataBase.getInfo(dataBase!!, "nada"))
+        getArtistInfo(artist!!)
     }
-    //TODO el método hace muchas cosas -> hay que dividirlo
-    fun getArtistInfo(artistName: String?) {
+
+    fun getArtistInfo(artistName: String) {
 
         // create
         val retrofit = Retrofit.Builder()
@@ -58,9 +57,9 @@ class OtherInfoWindow : AppCompatActivity() {
         CreateThreadCAMBIARNOMBRE(artistName, NYTimesAPI)
     }
 
-    private fun CreateThreadCAMBIARNOMBRE(artistName: String?, NYTimesAPI: NYTimesAPI) {
-        Thread { //TODO text -> el nombre del artista que encuentra en la base de datos
-            var infoDB = DataBase.getInfo(dataBase, artistName)
+    private fun CreateThreadCAMBIARNOMBRE(artistName: String, NYTimesAPI: NYTimesAPI) {
+        Thread {
+            val infoDB = DataBase.getInfo(dataBase!!, artistName)
             var NYTinfo = ""
             //TODO sacar comentarios, cambiar el != null por algo de null operators
             if (infoDB != null) { // exists in db
@@ -75,19 +74,17 @@ class OtherInfoWindow : AppCompatActivity() {
                     val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
                     val response = jobj["response"].asJsonObject
                     //TODO cambiar _abstract porque incluso el nombre es una palabra reservada
-                    //_abstract es la información de la página, la que va debajo de la foto
                     val abstractNYT = response["docs"].asJsonArray[0].asJsonObject["abstract"]
                     val urlNYT = response["docs"].asJsonArray[0].asJsonObject["web_url"]
 
                     //TODO Este text tendría que ser otra variable, no tiene que ver con lo que hace la anterior
-                    //Este text es la información que devuelve NYT (debajo de la imagen)
                     if (abstractNYT == null) {
                         NYTinfo = "No Results"
                     } else {
                         NYTinfo = abstractNYT.asString.replace("\\n", "\n")
                         NYTinfo = textToHtml(NYTinfo, artistName)
                         // save to DB  <o/
-                        DataBase.saveArtist(dataBase, artistName, NYTinfo)
+                        DataBase.saveArtist(dataBase!!, artistName, NYTinfo)
                     }
                     val urlString = urlNYT.asString
                     findViewById<View>(R.id.openUrlButton).setOnClickListener {
