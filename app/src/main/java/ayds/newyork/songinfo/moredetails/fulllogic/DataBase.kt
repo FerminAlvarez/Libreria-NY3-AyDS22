@@ -6,7 +6,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.util.Log
-import java.sql.*
 import java.util.ArrayList
 
 private const val ARTISTS_TABLE = "artists"
@@ -15,7 +14,7 @@ private const val ARTIST = "artist"
 private const val INFO = "info"
 private const val SOURCE = "source"
 
-class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
+class DataBase(context: Context) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
             "create table $ARTISTS_TABLE ($ID INTEGER PRIMARY KEY AUTOINCREMENT, $ARTIST string, $INFO string, $SOURCE integer)"
@@ -28,14 +27,13 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
     companion object {
 
         @JvmStatic
-        fun saveArtist(dbHelper: DataBase, artist: String?, info: String?) {
+        fun saveArtist(dbHelper: DataBase, artist: String, info: String) {
             val db = dbHelper.writableDatabase
             val values = createValues(artist, info, "1")
-
-            val newRowId = insertValues(db, ARTISTS_TABLE, values)
+            insertValues(db, ARTISTS_TABLE, values)
         }
 
-        private fun createValues(artist: String?, info: String?, source: String?): ContentValues {
+        private fun createValues(artist: String, info: String, source: String): ContentValues {
             val values = ContentValues()
             values.put(ARTIST, artist)
             values.put(INFO, info)
@@ -55,8 +53,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             val selectionArgs = arrayOf(artist)
             val sortOrder = "$ARTIST DESC"
             val cursor = executeQuery(
-                db, ARTISTS_TABLE, projection, selection, selectionArgs,
-                null, null, sortOrder
+                db, ARTISTS_TABLE, projection, selection, selectionArgs, sortOrder
             )
             val items = getInfo(cursor)
             cursor.close()
@@ -66,8 +63,14 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         private fun createArtistProjection() = arrayOf(ID, ARTIST, INFO)
 
         private fun executeQuery(
-            db: SQLiteDatabase, table: String, projection: Array<String>, selection: String,
-            selectionArgs: Array<String>, groupBy: String?, having: String?, sortOrder: String
+            db: SQLiteDatabase,
+            table: String,
+            projection: Array<String>,
+            selection: String,
+            selectionArgs: Array<String>,
+            sortOrder: String,
+            groupBy: String? = null,
+            having: String? = null
         ): Cursor {
             return db.query(
                 table,
