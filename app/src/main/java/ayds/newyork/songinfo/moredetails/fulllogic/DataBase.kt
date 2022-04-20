@@ -41,9 +41,8 @@ class DataBase(context: Context) : SQLiteOpenHelper(context, "dictionary.db", nu
             return values
         }
 
-        private fun insertValues(db: SQLiteDatabase, table: String, values: ContentValues): Long {
-            return db.insert(table, null, values)
-        }
+        private fun insertValues(db: SQLiteDatabase, table: String, values: ContentValues): Long =
+            db.insert(table, null, values)
 
         @JvmStatic
         fun getInfo(dbHelper: DataBase, artist: String): String? {
@@ -60,9 +59,8 @@ class DataBase(context: Context) : SQLiteOpenHelper(context, "dictionary.db", nu
             return if (items.isEmpty()) null else items[0]
         }
 
-        private fun closeCursor(cursor: Cursor) {
+        private fun closeCursor(cursor: Cursor) =
             cursor.close()
-        }
 
         private fun createArtistProjection() = arrayOf(ID, ARTIST, INFO)
 
