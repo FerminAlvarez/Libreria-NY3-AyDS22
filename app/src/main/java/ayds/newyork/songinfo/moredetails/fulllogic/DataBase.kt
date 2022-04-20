@@ -9,8 +9,6 @@ import android.util.Log
 import java.sql.*
 import java.util.ArrayList
 
-private const val DATABASE_URL = "jdbc:sqlite:./dictionary.db"
-private const val QUERY_TIMEOUT = 30
 private const val ARTISTS_TABLE = "artists"
 private const val ID = "id"
 private const val ARTIST = "artist"
@@ -28,47 +26,6 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
     companion object {
-
-        fun testDB() {
-            var connection: Connection? = null
-            try {
-                connection = getConnection()
-                val statement = prepareStatement(connection)
-                val rs = getAllArtists(statement)
-                while (rs.next()) {
-                    println("id = " + rs.getInt(ID))
-                    println("artist = " + rs.getString(ARTIST))
-                    println("info = " + rs.getString(INFO))
-                    println("source = " + rs.getString(SOURCE))
-                }
-            } catch (e: SQLException) {
-                System.err.println(e.message)
-            } finally {
-                closeConnection(connection)
-            }
-        }
-
-        private fun getConnection(): Connection {
-            return DriverManager.getConnection(DATABASE_URL)
-        }
-
-        private fun getAllArtists(statement: Statement): ResultSet {
-            return statement.executeQuery("select * from $ARTISTS_TABLE")
-        }
-
-        private fun prepareStatement(connection: Connection): Statement {
-            val statement = connection.createStatement()
-            statement.queryTimeout = QUERY_TIMEOUT
-            return statement
-        }
-
-        private fun closeConnection(connection: Connection?) {
-            try {
-                connection?.close()
-            } catch (e: SQLException) {
-                System.err.println(e)
-            }
-        }
 
         @JvmStatic
         fun saveArtist(dbHelper: DataBase, artist: String?, info: String?) {
