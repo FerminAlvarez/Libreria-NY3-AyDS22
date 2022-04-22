@@ -42,19 +42,8 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun prepareArtistInfoView(artistName: String) {
         Thread {
             val infoDB = DataBase.getInfo(dataBase, artistName)
-            val artistInfo : String
-            //TODO sacar comentarios, cambiar el != null por algo de null operators
-            if (infoDB != null) { // exists in db
-                artistInfo = "[*]$infoDB"
-            } else { // get from service
-                createRetrofit()
-                val response = createArtistInfoJsonObject(artistName)
-                val abstractNYT = response["docs"].asJsonArray[0].asJsonObject["abstract"]
-                artistInfo = getArtistInfo(abstractNYT, artistName)
-                abstractNYT.let { DataBase.saveArtist(dataBase, artistName, artistInfo) }
-                val urlNYT = response["docs"].asJsonArray[0].asJsonObject["web_url"]
-                createURLButtonListener(urlNYT)
-            }
+
+            val artistInfo : String = recoverArtistInfoFromDB(infoDB) ?: recoverArtistInfoFromService(artistName)
 
             runOnUiThread {
                 Picasso.get().load(logoNYT).into(findViewById<View>(R.id.imageView) as ImageView)
@@ -62,6 +51,24 @@ class OtherInfoWindow : AppCompatActivity() {
                     HtmlCompat.fromHtml(artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
             }
         }.start()
+    }
+
+    private fun recoverArtistInfoFromService(
+        artistName: String
+    ): String {
+        val artistInfoResult : String
+        nytimesAPI = createRetrofit()
+        val response = createArtistInfoJsonObject(artistName)
+        val abstractNYT = response["docs"].asJsonArray[0].asJsonObject["abstract"]
+        artistInfoResult = getArtistInfo(abstractNYT, artistName)
+        abstractNYT.let { DataBase.saveArtist(dataBase, artistName, artistInfoResult) }
+        val urlNYT = response["docs"].asJsonArray[0].asJsonObject["web_url"]
+        createURLButtonListener(urlNYT)
+        return artistInfoResult
+    }
+
+    private fun recoverArtistInfoFromDB(infoDB: String?): String? {
+        return if (infoDB != null) "[*]$infoDB" else null
     }
 
     private fun getArtistInfo(
