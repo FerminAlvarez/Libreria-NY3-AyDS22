@@ -19,8 +19,10 @@ private const val QUERY_SORT_ORDER = "$ARTIST_COLUMN DESC"
 
 class DataBase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME , null, DATABASE_VERSION) {
     override fun onCreate(database: SQLiteDatabase) {
-        database.execSQL(CREATE_TABLE_QUERY)
+        createArtistsTable(database)
     }
+
+    private fun createArtistsTable(database: SQLiteDatabase) = database.execSQL(CREATE_TABLE_QUERY)
 
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
@@ -46,39 +48,27 @@ class DataBase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME , nul
         @JvmStatic
         fun getInfo(dbHelper: DataBase, artist: String): String? {
             val database = dbHelper.readableDatabase
-            val projection = createArtistProjection()
-            val selectionArgs = arrayOf(artist)
-            val cursor = executeQuery(
-                database, projection, selectionArgs)
-            val items = getInfo(cursor)
+            val cursor = getCursor(database, artist)
+            val items = getArtistInfo(cursor)
             closeCursor(cursor)
             return if (items.isEmpty()) null else items[0]
         }
 
-        private fun closeCursor(cursor: Cursor) =
-            cursor.close()
-
-        private fun createArtistProjection() = arrayOf(ID_COLUMN, ARTIST_COLUMN, INFO_COLUMN)
-
-        private fun executeQuery(
-            database: SQLiteDatabase,
-            projection: Array<String>,
-            selectionArgs: Array<String>,
-            groupBy: String? = null,
-            having: String? = null
-        ): Cursor {
+        private fun getCursor(database: SQLiteDatabase, artist: String): Cursor {
+            val projection = arrayOf(ID_COLUMN, ARTIST_COLUMN, INFO_COLUMN)
+            val selectionArgs = arrayOf(artist)
             return database.query(
                 ARTISTS_TABLE,
                 projection,
                 QUERY_SELECTION,
                 selectionArgs,
-                groupBy,
-                having,
+                null,
+                null,
                 QUERY_SORT_ORDER
             )
         }
 
-        private fun getInfo(cursor: Cursor): MutableList<String> {
+        private fun getArtistInfo(cursor: Cursor): MutableList<String> {
             val items: MutableList<String> = ArrayList()
             while (cursor.moveToNext()) {
                 val info = cursor.getString(
@@ -88,5 +78,8 @@ class DataBase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME , nul
             }
             return items
         }
+
+        private fun closeCursor(cursor: Cursor) =
+            cursor.close()
     }
 }
