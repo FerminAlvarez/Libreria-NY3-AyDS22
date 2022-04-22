@@ -31,7 +31,6 @@ class OtherInfoWindow : AppCompatActivity() {
         nytInfoPane = findViewById(R.id.NYTInfoPane)
 
         openDataBase()
-        //TODO checkear null
         prepareArtistInfoView(intent.getStringExtra("artistName")!!)
     }
 
@@ -43,20 +42,18 @@ class OtherInfoWindow : AppCompatActivity() {
         Thread {
             val infoDB = DataBase.getInfo(dataBase, artistName)
 
-            val artistInfo : String = recoverArtistInfoFromDB(infoDB) ?: recoverArtistInfoFromService(artistName)
+            val artistInfo: String =
+                recoverArtistInfoFromDB(infoDB) ?: recoverArtistInfoFromService(artistName)
 
-            runOnUiThread {
-                Picasso.get().load(logoNYT).into(findViewById<View>(R.id.imageView) as ImageView)
-                nytInfoPane.text =
-                    HtmlCompat.fromHtml(artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
-            }
+            buildOtherInfoWindow(artistInfo)
         }.start()
     }
 
-    private fun recoverArtistInfoFromService(
-        artistName: String
-    ): String {
-        val artistInfoResult : String
+    private fun recoverArtistInfoFromDB(infoDB: String?): String? =
+        if (infoDB != null) "[*]$infoDB" else null
+
+    private fun recoverArtistInfoFromService(artistName: String): String {
+        val artistInfoResult: String
         nytimesAPI = createRetrofit()
         val response = createArtistInfoJsonObject(artistName)
         val abstractNYT = response["docs"].asJsonArray[0].asJsonObject["abstract"]
@@ -67,15 +64,23 @@ class OtherInfoWindow : AppCompatActivity() {
         return artistInfoResult
     }
 
-    private fun recoverArtistInfoFromDB(infoDB: String?): String? {
-        return if (infoDB != null) "[*]$infoDB" else null
+    private fun createRetrofit(): NYTimesAPI {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.nytimes.com/svc/search/v2/")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
+        return retrofit.create(NYTimesAPI::class.java)
     }
 
-    private fun getArtistInfo(
-        abstractNYT: JsonElement?,
-        artistName: String
-    ): String {
-        var artistInfoResult : String
+    private fun createArtistInfoJsonObject(artistName: String): JsonObject {
+        val callResponse = nytimesAPI.getArtistInfo(artistName).execute()
+        val gson = Gson()
+        val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
+        return jobj["response"].asJsonObject
+    }
+
+    private fun getArtistInfo(abstractNYT: JsonElement?, artistName: String): String {
+        var artistInfoResult: String
         if (abstractNYT == null) {
             artistInfoResult = "No Results"
         } else {
@@ -83,32 +88,6 @@ class OtherInfoWindow : AppCompatActivity() {
             artistInfoResult = artistNameToHtml(artistInfoResult, artistName)
         }
         return artistInfoResult
-    }
-
-    private fun createRetrofit(): NYTimesAPI {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.nytimes.com/svc/search/v2/")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-        return retrofit.create(nytimesAPI::class.java)
-    }
-
-    private fun createURLButtonListener(urlNYT: JsonElement) {
-        val urlString = urlNYT.asString
-        findViewById<View>(R.id.openUrlButton).setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(urlString)
-            this.startActivity(intent)
-        }
-    }
-
-    private fun createArtistInfoJsonObject(
-        artistName: String
-    ): JsonObject {
-        val callResponse = nytimesAPI.getArtistInfo(artistName).execute()
-        val gson = Gson()
-        val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
-        return jobj["response"].asJsonObject
     }
 
     private fun artistNameToHtml(NYTinfo: String, artistName: String): String {
@@ -122,6 +101,23 @@ class OtherInfoWindow : AppCompatActivity() {
         builder.append(textWithBold)
         builder.append("</font></div></html>")
         return builder.toString()
+    }
+
+    private fun createURLButtonListener(urlNYT: JsonElement) {
+        val urlString = urlNYT.asString
+        findViewById<View>(R.id.openUrlButton).setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(urlString)
+            this.startActivity(intent)
+        }
+    }
+
+    private fun buildOtherInfoWindow(artistInfo: String) {
+        runOnUiThread {
+            Picasso.get().load(logoNYT).into(findViewById<View>(R.id.imageView) as ImageView)
+            nytInfoPane.text =
+                HtmlCompat.fromHtml(artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        }
     }
 
     companion object {
