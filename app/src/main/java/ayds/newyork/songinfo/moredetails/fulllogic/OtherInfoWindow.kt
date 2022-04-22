@@ -40,7 +40,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun prepareArtistInfoView(artistName: String) {
         Thread {
-            val infoDB = DataBase.getInfo(dataBase, artistName)
+            val infoDB = dataBase.getInfo(artistName)
 
             val artistInfo: String =
                 recoverArtistInfoFromDB(infoDB) ?: recoverArtistInfoFromService(artistName)
@@ -58,7 +58,7 @@ class OtherInfoWindow : AppCompatActivity() {
         val response = createArtistInfoJsonObject(artistName)
         val abstractNYT = response["docs"].asJsonArray[0].asJsonObject["abstract"]
         artistInfoResult = getArtistInfo(abstractNYT, artistName)
-        abstractNYT.let { DataBase.saveArtist(dataBase, artistName, artistInfoResult) }
+        abstractNYT.let { dataBase.saveArtist(artistName, artistInfoResult) }
         val urlNYT = response["docs"].asJsonArray[0].asJsonObject["web_url"]
         createURLButtonListener(urlNYT)
         return artistInfoResult
