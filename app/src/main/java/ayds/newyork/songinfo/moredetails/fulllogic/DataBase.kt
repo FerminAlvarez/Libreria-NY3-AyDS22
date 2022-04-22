@@ -12,12 +12,11 @@ private const val ARTISTS_TABLE = "artists"
 private const val ID = "id"
 private const val ARTIST = "artist"
 private const val INFO = "info"
-private const val SOURCE = "source"
 
 class DataBase(context: Context) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
-            "create table $ARTISTS_TABLE ($ID INTEGER PRIMARY KEY AUTOINCREMENT, $ARTIST string, $INFO string, $SOURCE integer)"
+            "create table $ARTISTS_TABLE ($ID INTEGER PRIMARY KEY AUTOINCREMENT, $ARTIST string, $INFO string)"
         )
         Log.i("DB", "DB created")
     }
@@ -29,15 +28,14 @@ class DataBase(context: Context) : SQLiteOpenHelper(context, "dictionary.db", nu
         @JvmStatic
         fun saveArtist(dbHelper: DataBase, artist: String, info: String) {
             val db = dbHelper.writableDatabase
-            val values = createValues(artist, info, "1")
+            val values = createValues(artist, info)
             insertValues(db, ARTISTS_TABLE, values)
         }
 
-        private fun createValues(artist: String, info: String, source: String): ContentValues {
+        private fun createValues(artist: String, info: String): ContentValues {
             val values = ContentValues()
             values.put(ARTIST, artist)
             values.put(INFO, info)
-            values.put(SOURCE, source)
             return values
         }
 
