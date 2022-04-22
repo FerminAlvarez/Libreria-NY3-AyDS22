@@ -31,7 +31,6 @@ class OtherInfoWindow : AppCompatActivity() {
         nytInfoPane = findViewById(R.id.NYTInfoPane)
 
         openDataBase()
-        //TODO checkear null
         prepareArtistInfoView(intent.getStringExtra("artistName")!!)
     }
 
@@ -43,7 +42,8 @@ class OtherInfoWindow : AppCompatActivity() {
         Thread {
             val infoDB = DataBase.getInfo(dataBase, artistName)
 
-            val artistInfo : String = recoverArtistInfoFromDB(infoDB) ?: recoverArtistInfoFromService(artistName)
+            val artistInfo: String =
+                recoverArtistInfoFromDB(infoDB) ?: recoverArtistInfoFromService(artistName)
 
             runOnUiThread {
                 Picasso.get().load(logoNYT).into(findViewById<View>(R.id.imageView) as ImageView)
@@ -53,10 +53,8 @@ class OtherInfoWindow : AppCompatActivity() {
         }.start()
     }
 
-    private fun recoverArtistInfoFromService(
-        artistName: String
-    ): String {
-        val artistInfoResult : String
+    private fun recoverArtistInfoFromService(artistName: String): String {
+        val artistInfoResult: String
         nytimesAPI = createRetrofit()
         val response = createArtistInfoJsonObject(artistName)
         val abstractNYT = response["docs"].asJsonArray[0].asJsonObject["abstract"]
@@ -71,11 +69,8 @@ class OtherInfoWindow : AppCompatActivity() {
         return if (infoDB != null) "[*]$infoDB" else null
     }
 
-    private fun getArtistInfo(
-        abstractNYT: JsonElement?,
-        artistName: String
-    ): String {
-        var artistInfoResult : String
+    private fun getArtistInfo(abstractNYT: JsonElement?, artistName: String): String {
+        var artistInfoResult: String
         if (abstractNYT == null) {
             artistInfoResult = "No Results"
         } else {
@@ -90,7 +85,7 @@ class OtherInfoWindow : AppCompatActivity() {
             .baseUrl("https://api.nytimes.com/svc/search/v2/")
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
-        return retrofit.create(nytimesAPI::class.java)
+        return retrofit.create(NYTimesAPI::class.java)
     }
 
     private fun createURLButtonListener(urlNYT: JsonElement) {
@@ -102,9 +97,7 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    private fun createArtistInfoJsonObject(
-        artistName: String
-    ): JsonObject {
+    private fun createArtistInfoJsonObject(artistName: String): JsonObject {
         val callResponse = nytimesAPI.getArtistInfo(artistName).execute()
         val gson = Gson()
         val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
