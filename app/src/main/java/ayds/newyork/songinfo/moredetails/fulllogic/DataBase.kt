@@ -5,53 +5,51 @@ import android.database.sqlite.SQLiteDatabase
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.util.Log
 import java.util.ArrayList
 
+private const val DATABASE_NAME = "dictionary.db"
+private const val DATABASE_VERSION = 1
 private const val ARTISTS_TABLE = "artists"
-private const val ID = "id"
-private const val ARTIST = "artist"
-private const val INFO = "info"
+private const val ID_COLUMN = "id"
+private const val ARTIST_COLUMN = "artist"
+private const val INFO_COLUMN = "info"
+private const val CREATE_TABLE_QUERY = "create table $ARTISTS_TABLE ($ID_COLUMN INTEGER PRIMARY KEY AUTOINCREMENT, $ARTIST_COLUMN string, $INFO_COLUMN string)"
+private const val QUERY_SELECTION = "$ARTIST_COLUMN  = ?"
+private const val QUERY_SORT_ORDER = "$ARTIST_COLUMN DESC"
 
-class DataBase(context: Context) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
-    override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(
-            "create table $ARTISTS_TABLE ($ID INTEGER PRIMARY KEY AUTOINCREMENT, $ARTIST string, $INFO string)"
-        )
-        Log.i("DB", "DB created")
+class DataBase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME , null, DATABASE_VERSION) {
+    override fun onCreate(database: SQLiteDatabase) {
+        database.execSQL(CREATE_TABLE_QUERY)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
+    override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
     companion object {
 
         @JvmStatic
         fun saveArtist(dbHelper: DataBase, artist: String, info: String) {
-            val db = dbHelper.writableDatabase
-            val values = createValues(artist, info)
-            insertValues(db, ARTISTS_TABLE, values)
+            val database = dbHelper.writableDatabase
+            val newArtist = createArtist(artist, info)
+            insertNewArtist(database, newArtist)
         }
 
-        private fun createValues(artist: String, info: String): ContentValues {
+        private fun createArtist(artist: String, info: String): ContentValues {
             val values = ContentValues()
-            values.put(ARTIST, artist)
-            values.put(INFO, info)
+            values.put(ARTIST_COLUMN, artist)
+            values.put(INFO_COLUMN, info)
             return values
         }
 
-        private fun insertValues(db: SQLiteDatabase, table: String, values: ContentValues): Long =
-            db.insert(table, null, values)
+        private fun insertNewArtist(database: SQLiteDatabase, values: ContentValues): Long =
+            database.insert(ARTISTS_TABLE, null, values)
 
         @JvmStatic
         fun getInfo(dbHelper: DataBase, artist: String): String? {
-            val db = dbHelper.readableDatabase
+            val database = dbHelper.readableDatabase
             val projection = createArtistProjection()
-            val selection = "$ARTIST  = ?"
             val selectionArgs = arrayOf(artist)
-            val sortOrder = "$ARTIST DESC"
             val cursor = executeQuery(
-                db, ARTISTS_TABLE, projection, selection, selectionArgs, sortOrder
-            )
+                database, projection, selectionArgs)
             val items = getInfo(cursor)
             closeCursor(cursor)
             return if (items.isEmpty()) null else items[0]
@@ -60,26 +58,23 @@ class DataBase(context: Context) : SQLiteOpenHelper(context, "dictionary.db", nu
         private fun closeCursor(cursor: Cursor) =
             cursor.close()
 
-        private fun createArtistProjection() = arrayOf(ID, ARTIST, INFO)
+        private fun createArtistProjection() = arrayOf(ID_COLUMN, ARTIST_COLUMN, INFO_COLUMN)
 
         private fun executeQuery(
-            db: SQLiteDatabase,
-            table: String,
+            database: SQLiteDatabase,
             projection: Array<String>,
-            selection: String,
             selectionArgs: Array<String>,
-            sortOrder: String,
             groupBy: String? = null,
             having: String? = null
         ): Cursor {
-            return db.query(
-                table,
+            return database.query(
+                ARTISTS_TABLE,
                 projection,
-                selection,
+                QUERY_SELECTION,
                 selectionArgs,
                 groupBy,
                 having,
-                sortOrder
+                QUERY_SORT_ORDER
             )
         }
 
@@ -87,7 +82,7 @@ class DataBase(context: Context) : SQLiteOpenHelper(context, "dictionary.db", nu
             val items: MutableList<String> = ArrayList()
             while (cursor.moveToNext()) {
                 val info = cursor.getString(
-                    cursor.getColumnIndexOrThrow(INFO)
+                    cursor.getColumnIndexOrThrow(INFO_COLUMN)
                 )
                 items.add(info)
             }
