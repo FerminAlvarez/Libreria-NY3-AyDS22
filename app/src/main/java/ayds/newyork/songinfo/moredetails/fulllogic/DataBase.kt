@@ -29,27 +29,27 @@ class DataBase(context: Context) :
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
     fun saveArtist(artist: String, info: String) {
-        val newArtist = createArtist(artist, info)
+        val newArtist = setArtistValues(artist, info)
         insertNewArtist(newArtist)
     }
 
-    private fun createArtist(artist: String, info: String): ContentValues {
+    private fun setArtistValues(artist: String, info: String): ContentValues {
         val values = ContentValues()
         values.put(ARTIST_COLUMN, artist)
         values.put(INFO_COLUMN, info)
         return values
     }
 
-    private fun insertNewArtist(artist: ContentValues): Long {
+    private fun insertNewArtist(artist: ContentValues) {
         val database = this.writableDatabase
-        return database.insert(ARTISTS_TABLE, null, artist)
+        database.insert(ARTISTS_TABLE, null, artist)
     }
 
     fun getInfo(artist: String): String? {
         val cursor = getCursor(artist)
-        val items = getArtistInfo(cursor)
-        closeCursor(cursor)
-        return if (items.isEmpty()) null else items[0]
+        val artistInfoItems = getArtistInfo(cursor)
+        cursor.close()
+        return if (artistInfoItems.isEmpty()) null else artistInfoItems[0]
     }
 
     private fun getCursor(artist: String): Cursor {
@@ -68,16 +68,13 @@ class DataBase(context: Context) :
     }
 
     private fun getArtistInfo(cursor: Cursor): MutableList<String> {
-        val items: MutableList<String> = ArrayList()
+        val artistInfoItems: MutableList<String> = ArrayList()
         while (cursor.moveToNext()) {
             val info = cursor.getString(
                 cursor.getColumnIndexOrThrow(INFO_COLUMN)
             )
-            items.add(info)
+            artistInfoItems.add(info)
         }
-        return items
+        return artistInfoItems
     }
-
-    private fun closeCursor(cursor: Cursor) =
-        cursor.close()
 }
