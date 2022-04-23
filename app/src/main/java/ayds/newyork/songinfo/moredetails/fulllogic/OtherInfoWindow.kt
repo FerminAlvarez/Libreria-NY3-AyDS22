@@ -20,6 +20,12 @@ import java.lang.StringBuilder
 class OtherInfoWindow : AppCompatActivity() {
     private val logoNYT =
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU"
+    private val EMPTY_RESPONSE = "No Results"
+    private val NYT_API_URL = "https://api.nytimes.com/svc/search/v2/"
+    private val SECTION_DOCS = "docs"
+    private val SECTION_ABSTRACT = "abstract"
+    private val SECTION_WEB_URL = "web_url"
+    private val SECTION_RESPONSE = "response"
     private lateinit var nytInfoPane: TextView
     private lateinit var dataBase: DataBase
     private lateinit var nytimesAPI: NYTimesAPI
@@ -29,44 +35,39 @@ class OtherInfoWindow : AppCompatActivity() {
         setContentView(R.layout.activity_other_info)
 
         nytInfoPane = findViewById(R.id.NYTInfoPane)
+        dataBase = openDataBase()
 
-        openDataBase()
-        prepareArtistInfoView(intent.getStringExtra("artistName")!!)
+        prepareArtistInfoView(intent.getStringExtra(ARTIST_NAME_EXTRA)!!)
     }
 
-    private fun openDataBase() {
-        dataBase = DataBase(this)
-    }
+    private fun openDataBase() = DataBase(this)
 
     private fun prepareArtistInfoView(artistName: String) {
         Thread {
-            val infoDB = dataBase.getInfo(artistName)
-
+            val infoDataBase = dataBase.getInfo(artistName)
             val artistInfo: String =
-                recoverArtistInfoFromDB(infoDB) ?: recoverArtistInfoFromService(artistName)
-
+                getArtistInfoFromDataBase(infoDataBase) ?: getArtistInfoFromService(artistName)
             buildOtherInfoWindow(artistInfo)
         }.start()
     }
 
-    private fun recoverArtistInfoFromDB(infoDB: String?): String? =
+    private fun getArtistInfoFromDataBase(infoDB: String?): String? =
         if (infoDB != null) "[*]$infoDB" else null
 
-    private fun recoverArtistInfoFromService(artistName: String): String {
-        val artistInfoResult: String
+    private fun getArtistInfoFromService(artistName: String): String {
         nytimesAPI = createRetrofit()
         val response = createArtistInfoJsonObject(artistName)
-        val abstractNYT = response["docs"].asJsonArray[0].asJsonObject["abstract"]
-        artistInfoResult = getArtistInfo(abstractNYT, artistName)
+        val abstractNYT = response[SECTION_DOCS].asJsonArray[0].asJsonObject[SECTION_ABSTRACT]
+        val artistInfoResult = getArtistInfo(abstractNYT, artistName)
         abstractNYT.let { dataBase.saveArtist(artistName, artistInfoResult) }
-        val urlNYT = response["docs"].asJsonArray[0].asJsonObject["web_url"]
+        val urlNYT = response[SECTION_DOCS].asJsonArray[0].asJsonObject[SECTION_WEB_URL]
         createURLButtonListener(urlNYT)
         return artistInfoResult
     }
 
     private fun createRetrofit(): NYTimesAPI {
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.nytimes.com/svc/search/v2/")
+            .baseUrl(NYT_API_URL)
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
         return retrofit.create(NYTimesAPI::class.java)
@@ -76,17 +77,17 @@ class OtherInfoWindow : AppCompatActivity() {
         val callResponse = nytimesAPI.getArtistInfo(artistName).execute()
         val gson = Gson()
         val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
-        return jobj["response"].asJsonObject
+        return jobj[SECTION_RESPONSE].asJsonObject
     }
 
-    private fun getArtistInfo(abstractNYT: JsonElement?, artistName: String): String {
-        var artistInfoResult: String
-        if (abstractNYT == null) {
-            artistInfoResult = "No Results"
-        } else {
-            artistInfoResult = abstractNYT.asString.replace("\\n", "\n")
-            artistInfoResult = artistNameToHtml(artistInfoResult, artistName)
-        }
+    private fun getArtistInfo(abstractNYT: JsonElement?, artistName: String) =
+        emptyResponse(abstractNYT) ?: getfromService(abstractNYT, artistName)
+
+    private fun emptyResponse(abstractNYT: JsonElement?) = if (abstractNYT == null) EMPTY_RESPONSE else null
+
+    private fun getfromService(abstractNYT: JsonElement?, artistName: String): String {
+        val artistInfoFromService = abstractNYT!!.asString.replace("\\n", "\n")
+        val artistInfoResult = artistNameToHtml(artistInfoFromService, artistName)
         return artistInfoResult
     }
 
