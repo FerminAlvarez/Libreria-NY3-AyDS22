@@ -17,16 +17,17 @@ import androidx.core.text.HtmlCompat
 import com.google.gson.JsonElement
 import java.lang.StringBuilder
 
+private const val logoNYT =
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU"
+private const val EMPTY_ABSTRACT = "No Results"
+private const val NYT_API_URL = "https://api.nytimes.com/svc/search/v2/"
+private const val SECTION_DOCS = "docs"
+private const val SECTION_ABSTRACT = "abstract"
+private const val SECTION_WEB_URL = "web_url"
+private const val SECTION_RESPONSE = "response"
+
 class OtherInfoWindow : AppCompatActivity() {
-    private val logoNYT =
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU"
-    private val EMPTY_ABSTRACT = "No Results"
-    private val NYT_API_URL = "https://api.nytimes.com/svc/search/v2/"
-    private val SECTION_DOCS = "docs"
-    private val SECTION_ABSTRACT = "abstract"
-    private val SECTION_WEB_URL = "web_url"
-    private val SECTION_RESPONSE = "response"
-    private lateinit var ARTIST_NAME : String
+    private lateinit var ARTIST_NAME: String
     private lateinit var dataBase: DataBase
     private lateinit var apiResponse: JsonObject
     private var artistInfoWasInDataBase: Boolean = false
@@ -38,41 +39,21 @@ class OtherInfoWindow : AppCompatActivity() {
         prepareOtherInfoView()
     }
 
+    private fun openDataBase() = DataBase(this)
+
     private fun prepareOtherInfoView() {
         setContentView(R.layout.activity_other_info)
-        Thread{
+        Thread {
             val artistInfo = getArtistInfo()
             saveInDataBase(artistInfo)
             updateArtistInfoView(artistInfo)
         }.start()
     }
 
-    private fun saveInDataBase(artistInfo: String) {
-        if (!artistInfoWasInDataBase)
-            dataBase.saveArtist(ARTIST_NAME, artistInfo)
-    }
-
     private fun getArtistInfo(): String {
         val infoDataBase = dataBase.getInfo(ARTIST_NAME)
         infoDataBase?.let { artistInfoWasInDataBase = true }
         return addAlreadyInDataBaseSymbol(infoDataBase) ?: getArtistInfoFromService()
-    }
-
-    private fun openDataBase() = DataBase(this)
-
-    private fun updateArtistInfoView(artistInfo: String) {
-        updateURLButton()
-        runOnUiThread {
-            showLogo()
-            showArtistInfo(artistInfo)
-        }
-    }
-
-    private fun updateURLButton() {
-        if(!artistInfoWasInDataBase) {
-            val nytURL = getURLFromService(apiResponse)
-            nytURL.let { createURLButtonListener(nytURL) }
-        }
     }
 
     private fun addAlreadyInDataBaseSymbol(infoDataBase: String?): String? =
@@ -84,7 +65,13 @@ class OtherInfoWindow : AppCompatActivity() {
         return getArtistInfoFromAbstract(abstractNYT)
     }
 
-    private fun getURLFromService(response: JsonObject) = response[SECTION_DOCS].asJsonArray[0].asJsonObject[SECTION_WEB_URL]
+    private fun createArtistInfoJsonObject(): JsonObject {
+        val nytimesAPI = createRetrofit()
+        val callResponse = nytimesAPI.getArtistInfo(ARTIST_NAME).execute()
+        val gson = Gson()
+        val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
+        return jobj[SECTION_RESPONSE].asJsonObject
+    }
 
     private fun createRetrofit(): NYTimesAPI {
         val retrofit = Retrofit.Builder()
@@ -94,23 +81,15 @@ class OtherInfoWindow : AppCompatActivity() {
         return retrofit.create(NYTimesAPI::class.java)
     }
 
-    private fun createArtistInfoJsonObject(): JsonObject {
-        val nytimesAPI = createRetrofit()
-        val callResponse = nytimesAPI.getArtistInfo(ARTIST_NAME).execute()
-        val gson = Gson()
-        val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
-        return jobj[SECTION_RESPONSE].asJsonObject
-    }
-
     private fun getArtistInfoFromAbstract(abstractNYT: JsonElement?) =
         checkEmptyAbstract(abstractNYT) ?: abstractToString(abstractNYT)
 
-    private fun checkEmptyAbstract(abstractNYT: JsonElement?) = if (abstractNYT == null) EMPTY_ABSTRACT else null
+    private fun checkEmptyAbstract(abstractNYT: JsonElement?) =
+        if (abstractNYT == null) EMPTY_ABSTRACT else null
 
     private fun abstractToString(abstractNYT: JsonElement?): String {
         val artistInfoFromService = abstractNYT!!.asString.replace("\\n", "\n")
-        val artistInfoResult = artistNameToHtml(artistInfoFromService)
-        return artistInfoResult
+        return artistNameToHtml(artistInfoFromService)
     }
 
     private fun artistNameToHtml(NYTinfo: String): String {
@@ -126,6 +105,29 @@ class OtherInfoWindow : AppCompatActivity() {
         return builder.toString()
     }
 
+    private fun saveInDataBase(artistInfo: String) {
+        if (!artistInfoWasInDataBase)
+            dataBase.saveArtist(ARTIST_NAME, artistInfo)
+    }
+
+    private fun updateArtistInfoView(artistInfo: String) {
+        updateURLButton()
+        runOnUiThread {
+            showLogo()
+            showArtistInfo(artistInfo)
+        }
+    }
+
+    private fun updateURLButton() {
+        if (!artistInfoWasInDataBase) {
+            val nytURL = getURLFromService(apiResponse)
+            nytURL.let { createURLButtonListener(nytURL) }
+        }
+    }
+
+    private fun getURLFromService(response: JsonObject) =
+        response[SECTION_DOCS].asJsonArray[0].asJsonObject[SECTION_WEB_URL]
+
     private fun createURLButtonListener(urlNYT: JsonElement) {
         val urlString = urlNYT.asString
         findViewById<View>(R.id.openUrlButton).setOnClickListener {
@@ -135,14 +137,14 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    private fun showArtistInfo(artistInfo: String) {
-        val nytInfoPane : TextView = findViewById(R.id.NYTInfoPane)
-        nytInfoPane.text =
-            HtmlCompat.fromHtml(artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
+    private fun showLogo() {
+        Picasso.get().load(logoNYT).into(findViewById<View>(R.id.imageView) as ImageView)
     }
 
-    private fun showLogo(){
-        Picasso.get().load(logoNYT).into(findViewById<View>(R.id.imageView) as ImageView)
+    private fun showArtistInfo(artistInfo: String) {
+        val nytInfoPane: TextView = findViewById(R.id.NYTInfoPane)
+        nytInfoPane.text =
+            HtmlCompat.fromHtml(artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
     }
 
     companion object {
