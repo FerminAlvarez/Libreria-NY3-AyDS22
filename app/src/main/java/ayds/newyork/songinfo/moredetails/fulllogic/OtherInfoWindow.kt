@@ -27,14 +27,14 @@ private const val SECTION_WEB_URL = "web_url"
 private const val SECTION_RESPONSE = "response"
 
 class OtherInfoWindow : AppCompatActivity() {
-    private lateinit var ARTIST_NAME: String
+    private lateinit var aristName: String
     private lateinit var dataBase: DataBase
     private lateinit var apiResponse: JsonObject
     private var artistInfoWasInDataBase: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ARTIST_NAME = intent.getStringExtra(ARTIST_NAME_EXTRA)!!
+        aristName = intent.getStringExtra(ARTIST_NAME_EXTRA)!!
         dataBase = openDataBase()
         prepareOtherInfoView()
     }
@@ -51,7 +51,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun getArtistInfo(): String {
-        val infoDataBase = dataBase.getInfo(ARTIST_NAME)
+        val infoDataBase = dataBase.getInfo(aristName)
         infoDataBase?.let { artistInfoWasInDataBase = true }
         return addAlreadyInDataBaseSymbol(infoDataBase) ?: getArtistInfoFromService()
     }
@@ -67,7 +67,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun createArtistInfoJsonObject(): JsonObject {
         val nytimesAPI = createRetrofit()
-        val callResponse = nytimesAPI.getArtistInfo(ARTIST_NAME).execute()
+        val callResponse = nytimesAPI.getArtistInfo(aristName).execute()
         val gson = Gson()
         val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
         return jobj[SECTION_RESPONSE].asJsonObject
@@ -99,7 +99,7 @@ class OtherInfoWindow : AppCompatActivity() {
         val textWithBold = NYTinfo
             .replace("'", " ")
             .replace("\n", "<br>")
-            .replace("(?i)" + ARTIST_NAME.toRegex(), "<b>" + ARTIST_NAME.uppercase() + "</b>")
+            .replace("(?i)" + aristName.toRegex(), "<b>" + aristName.uppercase() + "</b>")
         builder.append(textWithBold)
         builder.append("</font></div></html>")
         return builder.toString()
@@ -107,7 +107,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun saveInDataBase(artistInfo: String) {
         if (!artistInfoWasInDataBase)
-            dataBase.saveArtist(ARTIST_NAME, artistInfo)
+            dataBase.saveArtist(aristName, artistInfo)
     }
 
     private fun updateArtistInfoView(artistInfo: String) {
@@ -142,7 +142,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun showArtistInfo(artistInfo: String) {
-        val nytInfoPane: TextView = findViewById(R.id.NYTInfoPane)
+        val nytInfoPane: TextView = findViewById(R.id.nytInfoPane)
         nytInfoPane.text =
             HtmlCompat.fromHtml(artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
     }

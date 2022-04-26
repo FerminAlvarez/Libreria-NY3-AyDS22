@@ -49,7 +49,7 @@ class DataBase(context: Context) :
         val cursor = getCursor(artist)
         val artistInfoItems = getArtistInfo(cursor)
         cursor.close()
-        return if (artistInfoItems.isEmpty()) null else artistInfoItems[0]
+        return artistInfoItems.firstOrNull()
     }
 
     private fun getCursor(artist: String): Cursor {
