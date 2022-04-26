@@ -25,6 +25,7 @@ private const val SECTION_DOCS = "docs"
 private const val SECTION_ABSTRACT = "abstract"
 private const val SECTION_WEB_URL = "web_url"
 private const val SECTION_RESPONSE = "response"
+private const val INFO_IN_DATABASE_SYMBOL = "[*]"
 
 class OtherInfoWindow : AppCompatActivity() {
     private lateinit var aristName: String
@@ -57,7 +58,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun addAlreadyInDataBaseSymbol(infoDataBase: String?): String? =
-        if (artistInfoWasInDataBase) "[*]$infoDataBase" else null
+        if (artistInfoWasInDataBase) "$INFO_IN_DATABASE_SYMBOL$infoDataBase" else null
 
     private fun getArtistInfoFromService(): String {
         apiResponse = createArtistInfoJsonObject()
@@ -85,18 +86,20 @@ class OtherInfoWindow : AppCompatActivity() {
         checkEmptyAbstract(abstractNYT) ?: abstractToString(abstractNYT)
 
     private fun checkEmptyAbstract(abstractNYT: JsonElement?) =
-        if (abstractNYT == null) EMPTY_ABSTRACT else null
+        abstractNYT?.let{ EMPTY_ABSTRACT }
 
     private fun abstractToString(abstractNYT: JsonElement?): String {
-        val artistInfoFromService = abstractNYT!!.asString.replace("\\n", "\n")
+        var artistInfoFromService = ""
+        abstractNYT?.let{artistInfoFromService = it.asString.replace("\\n", "\n")}
+
         return artistNameToHtml(artistInfoFromService)
     }
 
-    private fun artistNameToHtml(NYTinfo: String): String {
+    private fun artistNameToHtml(nytInfo: String): String {
         val builder = StringBuilder()
         builder.append("<html><div width=400>")
         builder.append("<font face=\"arial\">")
-        val textWithBold = NYTinfo
+        val textWithBold = nytInfo
             .replace("'", " ")
             .replace("\n", "<br>")
             .replace("(?i)" + aristName.toRegex(), "<b>" + aristName.uppercase() + "</b>")
