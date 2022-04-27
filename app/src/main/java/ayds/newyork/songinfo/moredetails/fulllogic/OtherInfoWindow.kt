@@ -28,7 +28,7 @@ private const val SECTION_RESPONSE = "response"
 private const val INFO_IN_DATABASE_SYMBOL = "[*]"
 
 class OtherInfoWindow : AppCompatActivity() {
-    private lateinit var aristName: String
+    private lateinit var artistName: String
     private lateinit var dataBase: DataBase
     private lateinit var apiResponse: JsonObject
     private var artistInfoWasInDataBase: Boolean = false
@@ -37,7 +37,7 @@ class OtherInfoWindow : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
 
-        aristName = intent.getStringExtra(ARTIST_NAME_EXTRA)!!
+        artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)!!
         dataBase = openDataBase()
         prepareOtherInfoView()
     }
@@ -53,7 +53,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun getArtistInfo(): String {
-        val infoDataBase = dataBase.getInfo(aristName)
+        val infoDataBase = dataBase.getInfo(artistName)
         infoDataBase?.let { artistInfoWasInDataBase = true }
         return addAlreadyInDataBaseSymbol(infoDataBase) ?: getArtistInfoFromService()
     }
@@ -69,7 +69,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun createArtistInfoJsonObject(): JsonObject {
         val nytimesAPI = createRetrofit()
-        val callResponse = nytimesAPI.getArtistInfo(aristName).execute()
+        val callResponse = nytimesAPI.getArtistInfo(artistName).execute()
         val gson = Gson()
         val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
         return jobj[SECTION_RESPONSE].asJsonObject
@@ -103,7 +103,7 @@ class OtherInfoWindow : AppCompatActivity() {
         val textWithBold = nytInfo
             .replace("'", " ")
             .replace("\n", "<br>")
-            .replace("(?i)" + aristName.toRegex(), "<b>" + aristName.uppercase() + "</b>")
+            .replace("(?i)" + artistName.toRegex(), "<b>" + artistName.uppercase() + "</b>")
         builder.append(textWithBold)
         builder.append("</font></div></html>")
         return builder.toString()
@@ -111,7 +111,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun saveInDataBase(artistInfo: String) {
         if (!artistInfoWasInDataBase)
-            dataBase.saveArtist(aristName, artistInfo)
+            dataBase.saveArtist(artistName, artistInfo)
     }
 
     private fun updateArtistInfoView(artistInfo: String) {
