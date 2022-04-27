@@ -101,7 +101,7 @@ class OtherInfoWindow : AppCompatActivity() {
         checkEmptyAbstract(abstractNYT) ?: abstractToString(abstractNYT)
 
     private fun checkEmptyAbstract(abstractNYT: JsonElement?) =
-        abstractNYT?.let { EMPTY_ABSTRACT }
+        if (abstractNYT == null) EMPTY_ABSTRACT else null
 
     private fun abstractToString(abstractNYT: JsonElement?): String {
         var artistInfoFromService = ""
