@@ -34,13 +34,12 @@ class OtherInfoWindow : AppCompatActivity() {
     private lateinit var urlButton: Button
     private lateinit var logoImageView: ImageView
     private lateinit var nytInfoPane: TextView
+    private lateinit var nytimesAPI: NYTimesAPI
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
 
-        artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)!!
-        dataBase = openDataBase()
         initProperties()
         prepareOtherInfoView()
     }
@@ -48,6 +47,9 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun openDataBase() = DataBase(this)
 
     private fun initProperties() {
+        artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)!!
+        dataBase = openDataBase()
+        nytimesAPI = createRetrofit()
         urlButton = findViewById(R.id.openUrlButton)
         logoImageView = findViewById(R.id.imageView)
         nytInfoPane = findViewById(R.id.nytInfoPane)
@@ -91,7 +93,6 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun createArtistInfoJsonObject(): JsonObject {
-        val nytimesAPI = createRetrofit()
         val callResponse = nytimesAPI.getArtistInfo(artistName).execute()
         val gson = Gson()
         val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
