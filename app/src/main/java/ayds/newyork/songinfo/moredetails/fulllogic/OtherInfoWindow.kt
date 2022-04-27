@@ -47,7 +47,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun openDataBase() = DataBase(this)
 
     private fun initProperties() {
-        artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)!!
+        artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)?:""
         dataBase = openDataBase()
         nytimesAPI = createRetrofit()
         urlButton = findViewById(R.id.openUrlButton)
