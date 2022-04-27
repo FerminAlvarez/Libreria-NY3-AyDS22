@@ -12,6 +12,7 @@ import android.content.Intent
 import android.net.Uri
 import com.squareup.picasso.Picasso
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import androidx.core.text.HtmlCompat
 import com.google.gson.JsonElement
@@ -32,6 +33,9 @@ class OtherInfoWindow : AppCompatActivity() {
     private lateinit var dataBase: DataBase
     private lateinit var apiResponse: JsonObject
     private var artistInfoWasInDataBase: Boolean = false
+    private lateinit var urlButton: Button
+    private lateinit var logoImageView: ImageView
+    private lateinit var nytInfoPane: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +43,17 @@ class OtherInfoWindow : AppCompatActivity() {
 
         artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)!!
         dataBase = openDataBase()
+        initProperties()
         prepareOtherInfoView()
     }
 
     private fun openDataBase() = DataBase(this)
+
+    private fun initProperties() {
+        urlButton = findViewById(R.id.openUrlButton)
+        logoImageView = findViewById(R.id.imageView)
+        nytInfoPane = findViewById(R.id.nytInfoPane)
+    }
 
     private fun prepareOtherInfoView() {
         Thread {
@@ -91,11 +102,11 @@ class OtherInfoWindow : AppCompatActivity() {
         checkEmptyAbstract(abstractNYT) ?: abstractToString(abstractNYT)
 
     private fun checkEmptyAbstract(abstractNYT: JsonElement?) =
-        abstractNYT?.let{ EMPTY_ABSTRACT }
+        abstractNYT?.let { EMPTY_ABSTRACT }
 
     private fun abstractToString(abstractNYT: JsonElement?): String {
         var artistInfoFromService = ""
-        abstractNYT?.let{artistInfoFromService = it.asString.replace("\\n", "\n")}
+        abstractNYT?.let { artistInfoFromService = it.asString.replace("\\n", "\n") }
 
         return artistNameToHtml(artistInfoFromService)
     }
@@ -136,7 +147,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun createURLButtonListener(urlNYT: JsonElement) {
         val urlString = urlNYT.asString
-        findViewById<View>(R.id.openUrlButton).setOnClickListener {
+        urlButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(urlString)
             this.startActivity(intent)
@@ -145,13 +156,12 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun updateLogo() {
         runOnUiThread {
-            Picasso.get().load(logoNYT).into(findViewById<View>(R.id.imageView) as ImageView)
+            Picasso.get().load(logoNYT).into(logoImageView)
         }
     }
 
     private fun updateArtistInfo(artistInfo: String) {
         runOnUiThread {
-            val nytInfoPane: TextView = findViewById(R.id.nytInfoPane)
             nytInfoPane.text =
                 HtmlCompat.fromHtml(artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
         }
