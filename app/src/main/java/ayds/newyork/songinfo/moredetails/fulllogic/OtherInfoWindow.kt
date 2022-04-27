@@ -116,10 +116,8 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun updateArtistInfoView(artistInfo: String) {
         updateURLButton()
-        runOnUiThread {
-            showLogo()
-            showArtistInfo(artistInfo)
-        }
+        updateLogo()
+        updateArtistInfo(artistInfo)
     }
 
     private fun updateURLButton() {
@@ -141,14 +139,18 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    private fun showLogo() {
-        Picasso.get().load(logoNYT).into(findViewById<View>(R.id.imageView) as ImageView)
+    private fun updateLogo() {
+        runOnUiThread {
+            Picasso.get().load(logoNYT).into(findViewById<View>(R.id.imageView) as ImageView)
+        }
     }
 
-    private fun showArtistInfo(artistInfo: String) {
-        val nytInfoPane: TextView = findViewById(R.id.nytInfoPane)
-        nytInfoPane.text =
-            HtmlCompat.fromHtml(artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
+    private fun updateArtistInfo(artistInfo: String) {
+        runOnUiThread {
+            val nytInfoPane: TextView = findViewById(R.id.nytInfoPane)
+            nytInfoPane.text =
+                HtmlCompat.fromHtml(artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        }
     }
 
     companion object {
