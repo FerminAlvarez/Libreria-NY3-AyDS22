@@ -46,10 +46,14 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun prepareOtherInfoView() {
         Thread {
-            val artistInfo = getArtistInfo()
-            saveInDataBase(artistInfo)
-            updateArtistInfoView(artistInfo)
+            runPrepareOtherInfoView()
         }.start()
+    }
+
+    private fun runPrepareOtherInfoView() {
+        val artistInfo = getArtistInfo()
+        saveInDataBase(artistInfo)
+        updateArtistInfoView(artistInfo)
     }
 
     private fun getArtistInfo(): String {
