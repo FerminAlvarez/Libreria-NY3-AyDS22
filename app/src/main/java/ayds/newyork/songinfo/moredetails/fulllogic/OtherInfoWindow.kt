@@ -35,6 +35,8 @@ class OtherInfoWindow : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_other_info)
+
         aristName = intent.getStringExtra(ARTIST_NAME_EXTRA)!!
         dataBase = openDataBase()
         prepareOtherInfoView()
@@ -43,7 +45,6 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun openDataBase() = DataBase(this)
 
     private fun prepareOtherInfoView() {
-        setContentView(R.layout.activity_other_info)
         Thread {
             val artistInfo = getArtistInfo()
             saveInDataBase(artistInfo)
