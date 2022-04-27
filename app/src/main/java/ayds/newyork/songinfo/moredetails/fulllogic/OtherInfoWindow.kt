@@ -148,10 +148,14 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun createURLButtonListener(urlNYT: JsonElement) {
         val urlString = urlNYT.asString
         urlButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(urlString)
-            this.startActivity(intent)
+            navigateToUrl(urlString)
         }
+    }
+
+    private fun navigateToUrl(urlString: String?) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(urlString)
+        this.startActivity(intent)
     }
 
     private fun updateLogo() {
