@@ -47,7 +47,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun openDataBase() = DataBase(this)
 
     private fun initProperties() {
-        artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)?:""
+        artistName = intent.getStringExtra(ARTIST_NAME_EXTRA) ?: ""
         dataBase = openDataBase()
         nytimesAPI = createRetrofit()
         urlButton = findViewById(R.id.openUrlButton)
@@ -67,26 +67,23 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun getArtistInfo(): String {
-        val infoDataBase = dataBase.getInfo(artistName)
-        val artistInfo = infoDataBase?.let {
-            addAlreadyInDataBaseSymbol(infoDataBase)
-        } ?: getArtistInfoFromService()
+        var artistInfo = dataBase.getInfo(artistName)
 
-        return artistInfo
-    }
-
-    private fun getArtistInfoFromService(): String {
-        val artistInfo = getArtistInfoFromApi()
-        saveInDataBase(artistInfo)
-        updateURLButton()
-
+        when {
+            artistInfo != null -> addAlreadyInDataBaseSymbol(artistInfo)
+            else -> {
+                artistInfo = getArtistInfoFromService()
+                saveInDataBase(artistInfo)
+                updateURLButton()
+            }
+        }
         return artistInfo
     }
 
     private fun addAlreadyInDataBaseSymbol(infoDataBase: String): String =
         "$INFO_IN_DATABASE_SYMBOL$infoDataBase"
 
-    private fun getArtistInfoFromApi(): String {
+    private fun getArtistInfoFromService(): String {
         apiResponse = createArtistInfoJsonObject()
         val abstractNYT = apiResponse[SECTION_DOCS].asJsonArray[0].asJsonObject[SECTION_ABSTRACT]
         return getArtistInfoFromAbstract(abstractNYT)
