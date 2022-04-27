@@ -11,7 +11,6 @@ import com.google.gson.JsonObject
 import android.content.Intent
 import android.net.Uri
 import com.squareup.picasso.Picasso
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import androidx.core.text.HtmlCompat
@@ -138,7 +137,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun updateURLButton() {
         if (!artistInfoWasInDataBase) {
             val nytURL = getURLFromService(apiResponse)
-            nytURL.let { createURLButtonListener(nytURL) }
+            createURLButtonListener(nytURL)
         }
     }
 
