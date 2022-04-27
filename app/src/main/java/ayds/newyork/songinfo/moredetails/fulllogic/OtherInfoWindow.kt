@@ -31,7 +31,6 @@ class OtherInfoWindow : AppCompatActivity() {
     private lateinit var artistName: String
     private lateinit var dataBase: DataBase
     private lateinit var apiResponse: JsonObject
-    private var artistInfoWasInDataBase: Boolean = false
     private lateinit var urlButton: Button
     private lateinit var logoImageView: ImageView
     private lateinit var nytInfoPane: TextView
@@ -62,20 +61,30 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun runPrepareOtherInfoView() {
         val artistInfo = getArtistInfo()
-        saveInDataBase(artistInfo)
         updateArtistInfoView(artistInfo)
     }
 
     private fun getArtistInfo(): String {
         val infoDataBase = dataBase.getInfo(artistName)
-        infoDataBase?.let { artistInfoWasInDataBase = true }
-        return addAlreadyInDataBaseSymbol(infoDataBase) ?: getArtistInfoFromService()
+        val artistInfo = infoDataBase?.let {
+            addAlreadyInDataBaseSymbol(infoDataBase)
+        } ?: getArtistInfoFromService()
+
+        return artistInfo
     }
 
-    private fun addAlreadyInDataBaseSymbol(infoDataBase: String?): String? =
-        if (artistInfoWasInDataBase) "$INFO_IN_DATABASE_SYMBOL$infoDataBase" else null
-
     private fun getArtistInfoFromService(): String {
+        val artistInfo = getArtistInfoFromApi()
+        saveInDataBase(artistInfo)
+        updateURLButton()
+
+        return artistInfo
+    }
+
+    private fun addAlreadyInDataBaseSymbol(infoDataBase: String): String =
+        "$INFO_IN_DATABASE_SYMBOL$infoDataBase"
+
+    private fun getArtistInfoFromApi(): String {
         apiResponse = createArtistInfoJsonObject()
         val abstractNYT = apiResponse[SECTION_DOCS].asJsonArray[0].asJsonObject[SECTION_ABSTRACT]
         return getArtistInfoFromAbstract(abstractNYT)
@@ -98,7 +107,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun getArtistInfoFromAbstract(abstractNYT: JsonElement?) =
-        abstractNYT?.let {abstractToString(abstractNYT)} ?: EMPTY_ABSTRACT
+        abstractNYT?.let { abstractToString(abstractNYT) } ?: EMPTY_ABSTRACT
 
     private fun abstractToString(abstractNYT: JsonElement?): String {
         var artistInfoFromService = ""
@@ -121,21 +130,17 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun saveInDataBase(artistInfo: String) {
-        if (!artistInfoWasInDataBase)
-            dataBase.saveArtist(artistName, artistInfo)
+        dataBase.saveArtist(artistName, artistInfo)
     }
 
     private fun updateArtistInfoView(artistInfo: String) {
-        updateURLButton()
         updateLogo()
         updateArtistInfo(artistInfo)
     }
 
     private fun updateURLButton() {
-        if (!artistInfoWasInDataBase) {
-            val nytURL = getURLFromService(apiResponse)
-            createURLButtonListener(nytURL)
-        }
+        val nytURL = getURLFromService(apiResponse)
+        createURLButtonListener(nytURL)
     }
 
     private fun getURLFromService(response: JsonObject) =
