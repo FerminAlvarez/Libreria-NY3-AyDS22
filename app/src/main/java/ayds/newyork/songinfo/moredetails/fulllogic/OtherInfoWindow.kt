@@ -70,7 +70,7 @@ class OtherInfoWindow : AppCompatActivity() {
         var artistInfo = dataBase.getInfo(artistName)
 
         when {
-            artistInfo != null -> addAlreadyInDataBaseSymbol(artistInfo)
+            artistInfo != null -> artistInfo = addAlreadyInDataBaseSymbol(artistInfo)
             else -> {
                 artistInfo = getArtistInfoFromService()
                 saveInDataBase(artistInfo)
