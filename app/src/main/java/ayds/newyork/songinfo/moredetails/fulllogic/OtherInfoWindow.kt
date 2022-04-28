@@ -150,8 +150,10 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun updateURLButton() {
-        val nytURL = getURLFromService(apiResponse)
-        createURLButtonListener(nytURL)
+        if(this::apiResponse.isInitialized){
+            val nytURL = getURLFromService(apiResponse)
+            createURLButtonListener(nytURL)
+        }
     }
 
     private fun getURLFromService(response: JsonObject) =
