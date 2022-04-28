@@ -95,7 +95,6 @@ class OtherInfoWindow : AppCompatActivity() {
             else -> {
                 artistInfo = getArtistInfoFromService()
                 saveInDataBase(artistInfo)
-                updateURLButton()
             }
         }
         return artistInfo
@@ -145,6 +144,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun updateArtistInfoView(artistInfo: String) {
+        updateURLButton()
         updateLogo()
         updateArtistInfo(artistInfo)
     }
