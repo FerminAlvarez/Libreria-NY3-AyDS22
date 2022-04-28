@@ -44,12 +44,33 @@ class OtherInfoWindow : AppCompatActivity() {
         prepareOtherInfoView()
     }
 
-    private fun openDataBase() = DataBase(this)
-
     private fun initProperties() {
+        initStateProperty()
+        initDependencyProperties()
+        initViewsProperties()
+    }
+
+    private fun initStateProperty(){
         artistName = intent.getStringExtra(ARTIST_NAME_EXTRA) ?: ""
+
+    }
+
+    private fun initDependencyProperties(){
         dataBase = openDataBase()
         nytimesAPI = createRetrofit()
+    }
+
+    private fun openDataBase() = DataBase(this)
+
+    private fun createRetrofit(): NYTimesAPI {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(NYT_API_URL)
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
+        return retrofit.create(NYTimesAPI::class.java)
+    }
+
+    private fun initViewsProperties(){
         urlButton = findViewById(R.id.openUrlButton)
         logoImageView = findViewById(R.id.imageView)
         nytInfoPane = findViewById(R.id.nytInfoPane)
@@ -94,14 +115,6 @@ class OtherInfoWindow : AppCompatActivity() {
         val gson = Gson()
         val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
         return jobj[SECTION_RESPONSE].asJsonObject
-    }
-
-    private fun createRetrofit(): NYTimesAPI {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(NYT_API_URL)
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-        return retrofit.create(NYTimesAPI::class.java)
     }
 
     private fun getArtistInfoFromAbstract(abstractNYT: JsonElement?) =
