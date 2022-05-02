@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.fulllogic.view
+package ayds.newyork.songinfo.moredetails.view
 
 data class MoreDetailsUiState (
     val articleUrl: String = "",

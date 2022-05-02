@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.fulllogic.view
+package ayds.newyork.songinfo.moredetails.view
 
 import androidx.appcompat.app.AppCompatActivity
 import ayds.newyork.songinfo.utils.UtilsInjector.navigationUtils

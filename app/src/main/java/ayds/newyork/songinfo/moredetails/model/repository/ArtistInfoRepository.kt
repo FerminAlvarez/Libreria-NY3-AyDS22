@@ -1,8 +1,8 @@
-package ayds.newyork.songinfo.moredetails.fulllogic.model.repository
+package ayds.newyork.songinfo.moredetails.model.repository
 
-import ayds.newyork.songinfo.moredetails.fulllogic.model.entities.ArtistInfo
-import ayds.newyork.songinfo.moredetails.fulllogic.model.entities.EmptyArtistInfo
-import ayds.newyork.songinfo.moredetails.fulllogic.model.repository.local.nyt.NytLocalStorage
+import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
+import ayds.newyork.songinfo.moredetails.model.entities.EmptyArtistInfo
+import ayds.newyork.songinfo.moredetails.model.repository.local.nyt.NytLocalStorage
 
 interface ArtistInfoRepository {
     fun getInfoByArtistName(artist: String): ArtistInfo

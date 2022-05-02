@@ -1,7 +1,7 @@
-package ayds.newyork.songinfo.moredetails.fulllogic.controller
+package ayds.newyork.songinfo.moredetails.controller
 
-import ayds.newyork.songinfo.moredetails.fulllogic.view.MoreDetailsUiEvent
-import ayds.newyork.songinfo.moredetails.fulllogic.view.MoreDetailsView
+import ayds.newyork.songinfo.moredetails.view.MoreDetailsUiEvent
+import ayds.newyork.songinfo.moredetails.view.MoreDetailsView
 import ayds.observer.Observer
 
 interface MoreDetailsController {

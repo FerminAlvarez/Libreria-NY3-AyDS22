@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.fulllogic.model.entities
+package ayds.newyork.songinfo.moredetails.model.entities
 
 interface ArtistInfo {
     val id: String

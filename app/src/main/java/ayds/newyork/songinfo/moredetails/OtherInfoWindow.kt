@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.fulllogic
+package ayds.newyork.songinfo.moredetails
 
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso
 import android.widget.Button
 import android.widget.ImageView
 import androidx.core.text.HtmlCompat
-import ayds.newyork.songinfo.moredetails.fulllogic.model.repository.external.nyt.NYTimesAPI
+import ayds.newyork.songinfo.moredetails.model.repository.external.nyt.NYTimesAPI
 import com.google.gson.JsonElement
 import java.lang.StringBuilder
 

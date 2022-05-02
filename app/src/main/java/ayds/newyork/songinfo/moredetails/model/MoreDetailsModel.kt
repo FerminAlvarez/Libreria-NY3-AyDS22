@@ -1,8 +1,7 @@
-package ayds.newyork.songinfo.moredetails.fulllogic.model
+package ayds.newyork.songinfo.moredetails.model
 
-import ayds.newyork.songinfo.home.model.repository.SongRepository
-import ayds.newyork.songinfo.moredetails.fulllogic.model.entities.ArtistInfo
-import ayds.newyork.songinfo.moredetails.fulllogic.model.repository.ArtistInfoRepository
+import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
+import ayds.newyork.songinfo.moredetails.model.repository.ArtistInfoRepository
 import ayds.observer.Observable
 import ayds.observer.Subject
 

@@ -1,10 +1,11 @@
-package ayds.newyork.songinfo.moredetails.fulllogic
-
+package ayds.newyork.songinfo.moredetails.model.repository.local.nyt.sqldb
 import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteDatabase
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
+import ayds.newyork.songinfo.moredetails.model.repository.local.nyt.NytLocalStorage
 import java.util.ArrayList
 
 private const val DATABASE_NAME = "dictionary.db"
@@ -18,8 +19,8 @@ private const val CREATE_TABLE_QUERY =
 private const val QUERY_SELECTION = "$ARTIST_COLUMN  = ?"
 private const val QUERY_SORT_ORDER = "$ARTIST_COLUMN DESC"
 
-class DataBase(context: Context) :
-    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class NytLocalStorageImpl(context: Context) :
+    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION), NytLocalStorage {
     override fun onCreate(database: SQLiteDatabase) {
         createArtistsTable(database)
     }
@@ -28,7 +29,7 @@ class DataBase(context: Context) :
 
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
-    fun saveArtist(artist: String, info: String) {
+    override fun saveArtist(artist: String, info: String) {
         val newArtist = setArtistValues(artist, info)
         insertNewArtist(newArtist)
     }
@@ -45,7 +46,7 @@ class DataBase(context: Context) :
         database.insert(ARTISTS_TABLE, null, artist)
     }
 
-    fun getInfo(artist: String): String? {
+    override fun getInfoByArtistName(artist: String): ArtistInfo {
         val cursor = getCursor(artist)
         val artistInfoItems = getArtistInfo(cursor)
         cursor.close()
