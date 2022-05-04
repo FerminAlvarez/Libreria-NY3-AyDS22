@@ -9,9 +9,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import ayds.newyork.songinfo.R
-import ayds.newyork.songinfo.home.model.HomeModel
-import ayds.newyork.songinfo.home.model.HomeModelInjector
-import ayds.newyork.songinfo.home.view.HomeViewInjector
 import ayds.newyork.songinfo.moredetails.*
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModel
 import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
@@ -51,11 +48,12 @@ private const val NYT_API_URL = "https://api.nytimes.com/svc/search/v2/"
 class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private val onActionSubject = Subject<MoreDetailsUiEvent>()
+    private val artistInfoHelper: ArtistInfoHelper = MoreDetailsViewInjector.artistInfoHelper
     private lateinit var moreDetailsModel: MoreDetailsModel
     private lateinit var logoImageView: ImageView
     private lateinit var nytInfoPane: TextView
     private lateinit var openArticleButton: Button
-    private lateinit var homeModel: HomeModel
+    private lateinit var moreDetailsView: MoreDetailsView
     private lateinit var artistName: String
     private lateinit var dataBase: DataBase
     private lateinit var urlButton: Button
@@ -83,8 +81,8 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun initModule() {
-        HomeViewInjector.init(this)
-        homeModel = HomeModelInjector.getHomeModel()
+        MoreDetailsViewInjector.init(this)
+        moreDetailsView = MoreDetailsViewInjector.getMoreDetailsModel()
     }
 
     private fun initListeners() {
@@ -100,7 +98,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
 
     private fun initObservers() {
-        moreDetailsModel.songObservable
+        moreDetailsModel.artistObservable
             .subscribe { value -> this.updateArtistInfo(value) }
     }
 
@@ -119,14 +117,14 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private fun updateArtistInfoUiState(artistInfo: ArtistInfo) {
         uiState = uiState.copy(
             articleUrl = artistInfo.artistName,
-            artistInfo = artistInfo.artistInfo
+            artistInfo = artistInfoHelper.getArtistInfoText(artistInfo)
         )
     }
 
     private fun updateNoResultsUiState() {
         uiState = uiState.copy(
             articleUrl = "",
-            artistInfo = ""
+            artistInfo = artistInfoHelper.getArtistInfoText()
         )
     }
 
