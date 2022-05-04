@@ -1,5 +1,6 @@
 package ayds.newyork.songinfo.moredetails.controller
 
+import ayds.newyork.songinfo.moredetails.model.MoreDetailsModelInjector
 import ayds.newyork.songinfo.moredetails.view.MoreDetailsView
 
 object MoreDetailsControllerInjector {
