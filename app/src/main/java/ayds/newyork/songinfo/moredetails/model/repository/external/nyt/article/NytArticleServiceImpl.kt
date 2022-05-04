@@ -1,6 +1,7 @@
 package ayds.newyork.songinfo.moredetails.model.repository.external.nyt.article
 
 import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
+import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
 import ayds.newyork.songinfo.moredetails.model.repository.external.nyt.NytArticleService
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -15,7 +16,7 @@ internal class NytArticleServiceImpl(
 
     private val nytimesAPI: NYTimesAPI = createRetrofit()
 
-    override fun getArtistInfo(name: String): ArtistInfo? {
+    override fun getArtistInfo(name: String): NytArtistInfo? {
         val callResponse = getArtistInfoFromService(name)
         return nytToArtistInfoResolver.getArtistInfoFromExternalData(callResponse.body())
     }
@@ -25,9 +26,10 @@ internal class NytArticleServiceImpl(
             .baseUrl(NYT_API_URL)
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
-        return retrofit.create(NYTimesAPI::class)
+        return retrofit.create(NYTimesAPI::class.java)
     }
-    private fun getArtistInfoFromService(query: String): Response<String> {
-        nytimesAPI.getArtistInfo(query)
+    private fun getArtistInfoFromService(query: String): Response<String?> {
+        return nytimesAPI.getArtistInfo(query)!!.execute()
+        //TODO: Revisar este !!
     }
 }
