@@ -1,36 +1,39 @@
 package ayds.newyork.songinfo.moredetails.model.repository.local.nyt.sqldb
+
 import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteDatabase
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import ayds.newyork.songinfo.home.model.entities.SpotifySong
+import ayds.newyork.songinfo.home.model.repository.local.spotify.sqldb.CursorToSpotifySongMapper
+import ayds.newyork.songinfo.home.model.repository.local.spotify.sqldb.SONGS_TABLE
 import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
+import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
 import ayds.newyork.songinfo.moredetails.model.repository.local.nyt.NytLocalStorage
 import java.util.ArrayList
 
-private const val DATABASE_NAME = "dictionary.db"
+const val DATABASE_NAME = "dictionary.db"
 private const val DATABASE_VERSION = 1
-private const val ARTISTS_TABLE = "artists"
-private const val ID_COLUMN = "id"
-private const val ARTIST_COLUMN = "artist"
-private const val INFO_COLUMN = "info"
-private const val CREATE_TABLE_QUERY =
-    "create table $ARTISTS_TABLE ($ID_COLUMN INTEGER PRIMARY KEY AUTOINCREMENT, $ARTIST_COLUMN string, $INFO_COLUMN string)"
 private const val QUERY_SELECTION = "$ARTIST_COLUMN  = ?"
 private const val QUERY_SORT_ORDER = "$ARTIST_COLUMN DESC"
 
-class NytLocalStorageImpl(context: Context) :
+class NytLocalStorageImpl(
+    context: Context,
+    private val cursorToNytArtistArticleMapper: CursorToNytArtistArticleMapper
+) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION), NytLocalStorage {
     override fun onCreate(database: SQLiteDatabase) {
         createArtistsTable(database)
     }
 
-    private fun createArtistsTable(database: SQLiteDatabase) = database.execSQL(CREATE_TABLE_QUERY)
+    private fun createArtistsTable(database: SQLiteDatabase) =
+        database.execSQL(createNytArtistArticleTableQuery)
 
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
-    override fun saveArtist(artist: String, info: String) {
-        val newArtist = setArtistValues(artist, info)
+    override fun saveArtist(artist: NytArtistInfo) {
+        val newArtist = setArtistValues(artist.artistName, artist.artistInfo)
         insertNewArtist(newArtist)
     }
 
@@ -46,11 +49,9 @@ class NytLocalStorageImpl(context: Context) :
         database.insert(ARTISTS_TABLE, null, artist)
     }
 
-    override fun getInfoByArtistName(artist: String): ArtistInfo {
+    override fun getInfoByArtistName(artist: String): NytArtistInfo? {
         val cursor = getCursor(artist)
-        val artistInfoItems = getArtistInfo(cursor)
-        cursor.close()
-        return artistInfoItems.firstOrNull()
+        return cursorToNytArtistArticleMapper.map(cursor)
     }
 
     private fun getCursor(artist: String): Cursor {
@@ -66,16 +67,5 @@ class NytLocalStorageImpl(context: Context) :
             null,
             QUERY_SORT_ORDER
         )
-    }
-
-    private fun getArtistInfo(cursor: Cursor): MutableList<String> {
-        val artistInfoItems: MutableList<String> = ArrayList()
-        while (cursor.moveToNext()) {
-            val info = cursor.getString(
-                cursor.getColumnIndexOrThrow(INFO_COLUMN)
-            )
-            artistInfoItems.add(info)
-        }
-        return artistInfoItems
     }
 }
