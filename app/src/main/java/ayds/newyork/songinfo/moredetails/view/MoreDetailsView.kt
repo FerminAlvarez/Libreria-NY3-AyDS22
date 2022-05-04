@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import ayds.newyork.songinfo.R
+import ayds.newyork.songinfo.home.model.HomeModel
 import ayds.newyork.songinfo.home.model.HomeModelInjector
 import ayds.newyork.songinfo.home.view.HomeViewInjector
 import ayds.newyork.songinfo.moredetails.*
@@ -37,13 +38,29 @@ interface MoreDetailsView {
     fun openExternalLink(url: String)
 }
 
-class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView{
+private const val logoNYT =
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU"
+private const val INFO_IN_DATABASE_SYMBOL = "[*]"
+private const val SECTION_RESPONSE = "response"
+private const val SECTION_DOCS = "docs"
+private const val EMPTY_ABSTRACT = "No Results"
+private const val SECTION_ABSTRACT = "abstract"
+private const val SECTION_WEB_URL = "web_url"
+private const val NYT_API_URL = "https://api.nytimes.com/svc/search/v2/"
+
+class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private val onActionSubject = Subject<MoreDetailsUiEvent>()
     private lateinit var moreDetailsModel: MoreDetailsModel
     private lateinit var logoImageView: ImageView
     private lateinit var nytInfoPane: TextView
     private lateinit var openArticleButton: Button
+    private lateinit var homeModel: HomeModel
+    private lateinit var artistName: String
+    private lateinit var dataBase: DataBase
+    private lateinit var urlButton: Button
+    private lateinit var apiResponse: JsonObject
+    private lateinit var nytimesAPI: NYTimesAPI
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
     override val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
@@ -70,14 +87,15 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView{
         HomeViewInjector.init(this)
         homeModel = HomeModelInjector.getHomeModel()
     }
-    private fun initListeners(){
+
+    private fun initListeners() {
         val urlString = urlNYT.asString
         openArticleButton.setOnClickListener {
             notifyOpenArticleUrlAction()
         }
     }
 
-    private fun notifyOpenArticleUrlAction(){
+    private fun notifyOpenArticleUrlAction() {
         onActionSubject.notify(MoreDetailsUiEvent.OpenArticleUrl)
     }
 
@@ -86,6 +104,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView{
         moreDetailsModel.songObservable
             .subscribe { value -> this.updateArtistInfo(value) }
     }
+
     private fun updateArtistInfo(artistInfo: ArtistInfo) {
         updateUiState(artistInfo)
         updateArtistInfo()
@@ -124,12 +143,11 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView{
         initViewsProperties()
     }
 
-    private fun initStateProperty(){
+    private fun initStateProperty() {
         artistName = intent.getStringExtra(OtherInfoWindow.ARTIST_NAME_EXTRA) ?: ""
-
     }
 
-    private fun initDependencyProperties(){
+    private fun initDependencyProperties() {
         dataBase = openDataBase()
         nytimesAPI = createRetrofit()
     }
@@ -144,8 +162,8 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView{
         return retrofit.create(NYTimesAPI::class.java)
     }
 
-    private fun initViewsProperties(){
-        urlButton = findViewById(R.id.openUrlButton)
+    private fun initViewsProperties() {
+        urlButton = findViewById<(R.id.openUrlButton)
         logoImageView = findViewById(R.id.imageView)
         nytInfoPane = findViewById(R.id.nytInfoPane)
     }
@@ -184,7 +202,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView{
     }
 
     private fun createArtistInfoJsonObject(): JsonObject {
-        val callResponse = nytimesAPI.getArtistInfo(artistName).execute()
+        val callResponse = nytimesAPI.getArtistInfo(artistName)!!.execute()
         val gson = Gson()
         val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
         return jobj[SECTION_RESPONSE].asJsonObject
@@ -224,7 +242,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView{
     }
 
     private fun updateURLButton() {
-        if(this::apiResponse.isInitialized){
+        if (this::apiResponse.isInitialized) {
             val nytURL = getURLFromService(apiResponse)
             createURLButtonListener(nytURL)
         }

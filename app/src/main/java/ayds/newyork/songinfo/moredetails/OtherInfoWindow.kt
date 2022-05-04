@@ -111,7 +111,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun createArtistInfoJsonObject(): JsonObject {
-        val callResponse = nytimesAPI.getArtistInfo(artistName).execute()
+        val callResponse = nytimesAPI.getArtistInfo(artistName)!!.execute()
         val gson = Gson()
         val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
         return jobj[SECTION_RESPONSE].asJsonObject
