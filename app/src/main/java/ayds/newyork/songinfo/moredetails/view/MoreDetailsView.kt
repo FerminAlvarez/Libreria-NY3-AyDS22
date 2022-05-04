@@ -75,7 +75,6 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
 
-        searchAction()
         initModule()
         initProperties()
         prepareOtherInfoView()
