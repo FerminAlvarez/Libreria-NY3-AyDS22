@@ -11,6 +11,7 @@ import androidx.core.text.HtmlCompat
 import ayds.newyork.songinfo.R
 import ayds.newyork.songinfo.moredetails.*
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModel
+import ayds.newyork.songinfo.moredetails.model.MoreDetailsModelInjector
 import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
 import ayds.newyork.songinfo.moredetails.model.entities.EmptyArtistInfo
 import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
@@ -53,7 +54,6 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private lateinit var logoImageView: ImageView
     private lateinit var nytInfoPane: TextView
     private lateinit var openArticleButton: Button
-    private lateinit var moreDetailsView: MoreDetailsView
     private lateinit var artistName: String
     private lateinit var dataBase: DataBase
     private lateinit var urlButton: Button
@@ -82,7 +82,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun initModule() {
         MoreDetailsViewInjector.init(this)
-        moreDetailsView = MoreDetailsViewInjector.getMoreDetailsModel()
+        moreDetailsModel = MoreDetailsModelInjector.getMoreDetailsModel()
     }
 
     private fun initListeners() {
