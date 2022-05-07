@@ -24,9 +24,6 @@ interface MoreDetailsView {
     fun openExternalLink(url: String)
 }
 
-private const val logoNYT =
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU"
-
 class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private val onActionSubject = Subject<MoreDetailsUiEvent>()
@@ -116,7 +113,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun updateLogo() {
         runOnUiThread {
-            Picasso.get().load(logoNYT).into(logoImageView)
+            Picasso.get().load(uiState.logoUrl).into(logoImageView)
         }
     }
 }
