@@ -14,6 +14,7 @@ private const val EMPTY_ABSTRACT = "No Results"
 private const val SECTION_DOCS = "docs"
 private const val SECTION_ABSTRACT = "abstract"
 private const val SECTION_WEB_URL = "web_url"
+private const val RESPONSE = "response"
 
 internal class JsonToArtistInfoResolver() : NytToArtistInfoResolver {
     override fun getArtistInfoFromExternalData(serviceData: String?, artistName:String): NytArtistInfo? =
@@ -31,8 +32,9 @@ internal class JsonToArtistInfoResolver() : NytToArtistInfoResolver {
 
 
     private fun String?.getFirstItem(): JsonElement {
-        val jobj = Gson().fromJson(this, JsonObject::class.java)
-        return jobj[SECTION_DOCS].asJsonArray[0]
+        var jobj = Gson().fromJson(this, JsonObject::class.java)
+        var response = jobj[RESPONSE].asJsonObject
+        return response[SECTION_DOCS].asJsonArray[0]
     }
 
     private fun JsonElement.getArtistInfo() = abstractToString(this.asJsonObject[SECTION_ABSTRACT])

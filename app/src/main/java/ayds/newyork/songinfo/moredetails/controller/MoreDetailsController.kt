@@ -29,6 +29,7 @@ internal class MoreDetailsControllerImpl(
     private fun openArticle() {
         Thread {
             moreDetailsModel.getInfoByArtistName(moreDetailsView.uiState.artistName)
+            moreDetailsView.openExternalLink(moreDetailsView.uiState.articleUrl)
         }.start()
     }
 }

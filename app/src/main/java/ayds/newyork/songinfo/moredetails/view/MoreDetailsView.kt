@@ -62,20 +62,9 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun initProperties() {
-        initStateProperty()
         openArticleButton = findViewById(R.id.openUrlButton)
         logoImageView = findViewById(R.id.imageView)
         nytInfoPane = findViewById(R.id.nytInfoPane)
-    }
-
-    private fun initStateProperty() {
-        uiState = uiState.copy(
-            artistName = intent.getStringExtra(OtherInfoWindow.ARTIST_NAME_EXTRA) ?: "",
-            articleUrl = uiState.articleUrl,
-            artistInfo = uiState.artistInfo,
-            logoUrl = uiState.logoUrl,
-        )
-
     }
 
     private fun initListeners() {
@@ -108,13 +97,16 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun updateArtistInfoUiState(artistInfo: ArtistInfo) {
         uiState = uiState.copy(
-            articleUrl = artistInfo.artistName,
-            artistInfo = artistInfoHelper.getArtistInfoText(artistInfo)
+            artistName = artistInfo.artistName,
+            articleUrl = artistInfo.artistURL,
+            artistInfo = artistInfoHelper.getArtistInfoText(artistInfo),
+            logoUrl = uiState.logoUrl
         )
     }
 
     private fun updateNoResultsUiState() {
         uiState = uiState.copy(
+            artistName = "",
             articleUrl = "",
             artistInfo = artistInfoHelper.getArtistInfoText()
         )
