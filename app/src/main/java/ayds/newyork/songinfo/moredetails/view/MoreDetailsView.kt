@@ -160,7 +160,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun initViewsProperties() {
-        urlButton = findViewById<(R.id.openUrlButton)
+        urlButton = findViewById(R.id.openUrlButton)
         logoImageView = findViewById(R.id.imageView)
         nytInfoPane = findViewById(R.id.nytInfoPane)
     }
