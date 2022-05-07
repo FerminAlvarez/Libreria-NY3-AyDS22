@@ -10,5 +10,5 @@ const val createNytArtistArticleTableQuery =
     "create table $ARTISTS_TABLE (" +
             "$ID_COLUMN INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "$ARTIST_COLUMN string, " +
-            "$INFO_COLUMN string)" +
+            "$INFO_COLUMN string," +
             "$URL_COLUMN string)"

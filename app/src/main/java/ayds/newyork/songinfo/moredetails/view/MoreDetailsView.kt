@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.newyork.songinfo.R
+import ayds.newyork.songinfo.moredetails.OtherInfoWindow
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModel
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModelInjector
 import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
@@ -25,6 +26,10 @@ interface MoreDetailsView {
 }
 
 class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
+
+    companion object {
+        const val ARTIST_NAME_EXTRA = "artistName"
+    }
 
     private val onActionSubject = Subject<MoreDetailsUiEvent>()
     private val artistInfoHelper: ArtistInfoHelper = MoreDetailsViewInjector.artistInfoHelper
@@ -57,9 +62,20 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun initProperties() {
+        initStateProperty()
         openArticleButton = findViewById(R.id.openUrlButton)
         logoImageView = findViewById(R.id.imageView)
         nytInfoPane = findViewById(R.id.nytInfoPane)
+    }
+
+    private fun initStateProperty() {
+        uiState = uiState.copy(
+            artistName = intent.getStringExtra(OtherInfoWindow.ARTIST_NAME_EXTRA) ?: "",
+            articleUrl = uiState.articleUrl,
+            artistInfo = uiState.artistInfo,
+            logoUrl = uiState.logoUrl,
+        )
+
     }
 
     private fun initListeners() {
