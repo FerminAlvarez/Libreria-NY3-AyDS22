@@ -26,6 +26,6 @@ object MoreDetailsModelInjector {
         val repository: ArtistInfoRepository =
             ArtistInfoRepositoryImpl(nytLocalStorage, nytArticleService)
 
-        MoreDetailsModelInjector.moreDetailsModel = MoreDetailsModelImpl(repository)
+        moreDetailsModel = MoreDetailsModelImpl(repository)
     }
 }

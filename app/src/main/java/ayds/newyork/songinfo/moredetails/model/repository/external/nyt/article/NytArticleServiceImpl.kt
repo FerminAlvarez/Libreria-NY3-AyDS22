@@ -18,7 +18,7 @@ internal class NytArticleServiceImpl(
 
     override fun getArtistInfo(name: String): NytArtistInfo? {
         val callResponse = getArtistInfoFromService(name)
-        return nytToArtistInfoResolver.getArtistInfoFromExternalData(callResponse.body())
+        return nytToArtistInfoResolver.getArtistInfoFromExternalData(callResponse.body(), name)
     }
 
     private fun createRetrofit(): NYTimesAPI {

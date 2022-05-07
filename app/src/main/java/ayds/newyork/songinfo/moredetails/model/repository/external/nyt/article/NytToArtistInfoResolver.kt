@@ -7,27 +7,22 @@ import com.google.gson.JsonObject
 import java.lang.StringBuilder
 
 interface NytToArtistInfoResolver {
-    fun getArtistInfoFromExternalData(serviceData: String?): NytArtistInfo?
+    fun getArtistInfoFromExternalData(serviceData: String?, artistName:String): NytArtistInfo?
 }
-
-private const val ID = "id"
-private const val URL = "url"
 
 private const val EMPTY_ABSTRACT = "No Results"
 private const val SECTION_DOCS = "docs"
 private const val SECTION_ABSTRACT = "abstract"
 private const val SECTION_WEB_URL = "web_url"
-private const val SECTION_RESPONSE = "response"
 
 internal class JsonToArtistInfoResolver() : NytToArtistInfoResolver {
-//TODO: si no entendi mal, el json nos devuelve en Abstract la Artist.info, el name lo tendriamos q pasar por parametro
-    override fun getArtistInfoFromExternalData(serviceData: String?): NytArtistInfo? =
+    override fun getArtistInfoFromExternalData(serviceData: String?, artistName:String): NytArtistInfo? =
         try {
             serviceData?.getFirstItem()?.let { item ->
                 NytArtistInfo(
-                    item.getId(),
-                    item.getArtistName(),
+                    artistName,
                     item.getArtistInfo(),
+                    item.getArtistUrl()
                 )
             }
         } catch (e: Exception) {
@@ -41,6 +36,8 @@ internal class JsonToArtistInfoResolver() : NytToArtistInfoResolver {
     }
 
     private fun JsonElement.getArtistInfo() = abstractToString(this.asJsonObject[SECTION_ABSTRACT])
+
+    private fun JsonElement.getArtistUrl() = this.asJsonObject[SECTION_WEB_URL].asString
 
     private fun abstractToString(abstractNYT: JsonElement?): String {
         var artistInfoFromService = ""

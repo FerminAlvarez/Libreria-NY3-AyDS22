@@ -35,7 +35,6 @@ internal class ArtistInfoRepositoryImpl(
                 }
             }
         }
-        //TODO agregar el asterisco, ver estructura de SpotifyLocalStorageImpl
         return artistInfo ?: EmptyArtistInfo
     }
 

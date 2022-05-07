@@ -10,7 +10,7 @@ interface MoreDetailsController {
 }
 
 internal class MoreDetailsControllerImpl(
-
+    private val moreDetailsModel: MoreDetailsModel
 ) : MoreDetailsController {
 
     private lateinit var moreDetailsView: MoreDetailsView
@@ -27,6 +27,9 @@ internal class MoreDetailsControllerImpl(
         }
 
     private fun openArticle() {
-        moreDetailsView.openExternalLink(moreDetailsView.uiState.articleUrl)
+        //var moreDetail = moreDetailsModel.getInfoByArtistName(moreDetailsView.uiState.articleUrl)
+        Thread {
+            //moreDetailsView.openExternalLink(moreDetail.artistURL)
+        }.start()
     }
 }
