@@ -32,7 +32,6 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private lateinit var logoImageView: ImageView
     private lateinit var nytInfoPane: TextView
     private lateinit var openArticleButton: Button
-    private lateinit var urlButton: Button
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
     override val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
@@ -58,7 +57,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun initProperties() {
-        urlButton = findViewById(R.id.openUrlButton)
+        openArticleButton = findViewById(R.id.openUrlButton)
         logoImageView = findViewById(R.id.imageView)
         nytInfoPane = findViewById(R.id.nytInfoPane)
     }
