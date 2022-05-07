@@ -11,12 +11,10 @@ import ayds.newyork.songinfo.moredetails.model.MoreDetailsModelInjector
 import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
 import ayds.newyork.songinfo.moredetails.model.entities.EmptyArtistInfo
 import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
-import ayds.newyork.songinfo.moredetails.model.repository.external.nyt.article.NYTimesAPI
 import ayds.newyork.songinfo.utils.UtilsInjector
 import ayds.newyork.songinfo.utils.navigation.NavigationUtils
 import ayds.observer.Observable
 import ayds.observer.Subject
-import com.google.gson.JsonObject
 import com.squareup.picasso.Picasso
 
 interface MoreDetailsView {
