@@ -10,14 +10,18 @@ interface NytToArtistInfoResolver {
     fun getArtistInfoFromExternalData(serviceData: String?, artistName:String): NytArtistInfo?
 }
 
-private const val EMPTY_ABSTRACT = "No Results"
 private const val SECTION_DOCS = "docs"
 private const val SECTION_ABSTRACT = "abstract"
 private const val SECTION_WEB_URL = "web_url"
 private const val RESPONSE = "response"
 
-internal class JsonToArtistInfoResolver() : NytToArtistInfoResolver {
-    override fun getArtistInfoFromExternalData(serviceData: String?, artistName:String): NytArtistInfo? =
+internal class JsonToArtistInfoResolver : NytToArtistInfoResolver {
+
+    private lateinit var artistName : String
+
+    override fun getArtistInfoFromExternalData(serviceData: String?, artistName:String): NytArtistInfo? {
+        this.artistName = artistName
+        val result =
         try {
             serviceData?.getFirstItem()?.let { item ->
                 NytArtistInfo(
@@ -29,11 +33,14 @@ internal class JsonToArtistInfoResolver() : NytToArtistInfoResolver {
         } catch (e: Exception) {
             null
         }
+        return result
+    }
+
 
 
     private fun String?.getFirstItem(): JsonElement {
-        var jobj = Gson().fromJson(this, JsonObject::class.java)
-        var response = jobj[RESPONSE].asJsonObject
+        val jobj = Gson().fromJson(this, JsonObject::class.java)
+        val response = jobj[RESPONSE].asJsonObject
         return response[SECTION_DOCS].asJsonArray[0]
     }
 
@@ -45,23 +52,19 @@ internal class JsonToArtistInfoResolver() : NytToArtistInfoResolver {
         var artistInfoFromService = ""
         abstractNYT?.let { artistInfoFromService = it.asString.replace("\\n", "\n") }
 
-        return artistNameToHtml(artistInfoFromService)
+        return articleToHTML(artistInfoFromService)
     }
 
-    private fun artistNameToHtml(nytInfo: String): String {
+    private fun articleToHTML(nytInfo: String): String {
         val builder = StringBuilder()
         builder.append("<html><div width=400>")
         builder.append("<font face=\"arial\">")
         val textWithBold = nytInfo
             .replace("'", " ")
             .replace("\n", "<br>")
-            //.replace("(?i)" + artistName.toRegex(), "<b>" + artistName.uppercase() + "</b>")
+            .replace("(?i)" + artistName.toRegex(), "<b>" + artistName.uppercase() + "</b>")
         builder.append(textWithBold)
         builder.append("</font></div></html>")
         return builder.toString()
     }
-
-    //falta integrar esta funcion
-    private fun getArtistInfoFromAbstract(abstractNYT: JsonElement?) =
-        abstractNYT?.let { abstractToString(abstractNYT) } ?: EMPTY_ABSTRACT
 }
