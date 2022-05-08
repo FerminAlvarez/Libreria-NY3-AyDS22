@@ -51,12 +51,12 @@ class OtherInfoWindow : AppCompatActivity() {
         initViewsProperties()
     }
 
-    private fun initStateProperty(){
+    private fun initStateProperty() {
         artistName = intent.getStringExtra(ARTIST_NAME_EXTRA) ?: ""
 
     }
 
-    private fun initDependencyProperties(){
+    private fun initDependencyProperties() {
         dataBase = openDataBase()
         nytimesAPI = createRetrofit()
     }
@@ -71,7 +71,7 @@ class OtherInfoWindow : AppCompatActivity() {
         return retrofit.create(NYTimesAPI::class.java)
     }
 
-    private fun initViewsProperties(){
+    private fun initViewsProperties() {
         urlButton = findViewById(R.id.openUrlButton)
         logoImageView = findViewById(R.id.imageView)
         nytInfoPane = findViewById(R.id.nytInfoPane)
@@ -151,7 +151,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun updateURLButton() {
-        if(this::apiResponse.isInitialized){
+        if (this::apiResponse.isInitialized) {
             val nytURL = getURLFromService(apiResponse)
             createURLButtonListener(nytURL)
         }

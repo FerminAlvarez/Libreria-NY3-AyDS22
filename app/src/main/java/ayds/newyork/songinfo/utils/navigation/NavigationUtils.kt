@@ -9,7 +9,7 @@ interface NavigationUtils {
     fun openExternalUrl(activity: Activity, url: String)
 }
 
-internal class NavigationUtilsImpl: NavigationUtils {
+internal class NavigationUtilsImpl : NavigationUtils {
     override fun openExternalUrl(activity: Activity, url: String) {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse(url)
