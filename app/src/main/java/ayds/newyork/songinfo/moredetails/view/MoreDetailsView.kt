@@ -6,7 +6,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.newyork.songinfo.R
-import ayds.newyork.songinfo.moredetails.OtherInfoWindow
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModel
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModelInjector
 import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
@@ -44,7 +43,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     override var uiState: MoreDetailsUiState = MoreDetailsUiState()
 
     override fun openExternalLink(url: String) {
-        if(!url.isEmpty())
+        if(url.isNotEmpty())
             navigationUtils.openExternalUrl(this, url)
     }
 
