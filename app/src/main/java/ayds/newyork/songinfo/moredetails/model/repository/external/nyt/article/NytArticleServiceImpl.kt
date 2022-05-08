@@ -28,6 +28,8 @@ internal class NytArticleServiceImpl(
         return retrofit.create(NYTimesAPI::class.java)
     }
     private fun getArtistInfoFromService(query: String): Response<String?> {
-        return nytimesAPI.getArtistInfo(query)!!.execute()
+        val response = nytimesAPI.getArtistInfo(query)
+
+        return response?.execute() ?: throw Exception("No Response from api")
     }
 }
