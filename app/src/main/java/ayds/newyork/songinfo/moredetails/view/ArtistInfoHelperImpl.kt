@@ -14,11 +14,11 @@ interface ArtistInfoHelper {
 internal class ArtistInfoHelperImpl : ArtistInfoHelper {
 
     override fun getArtistInfoText(artistInfo: ArtistInfo) = when (artistInfo) {
-        is NytArtistInfo -> formatArtisInfo(artistInfo)
+        is NytArtistInfo -> formatArtistInfo(artistInfo)
         else -> ARTIST_INFO_NOT_FOUND
     }
 
-    private fun formatArtisInfo(artistInfo: ArtistInfo): String {
+    private fun formatArtistInfo(artistInfo: ArtistInfo): String {
         val symbol = if (artistInfo.isLocallyStored) INFO_IN_DATABASE_SYMBOL else ""
         return symbol + artistInfo.artistInfo
     }
