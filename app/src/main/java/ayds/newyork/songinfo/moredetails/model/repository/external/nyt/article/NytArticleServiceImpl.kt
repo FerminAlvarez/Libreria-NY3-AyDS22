@@ -30,6 +30,5 @@ internal class NytArticleServiceImpl(
     }
     private fun getArtistInfoFromService(query: String): Response<String?> {
         return nytimesAPI.getArtistInfo(query)!!.execute()
-        //TODO: Revisar este !!
     }
 }
