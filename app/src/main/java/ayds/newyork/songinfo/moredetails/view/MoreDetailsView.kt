@@ -129,7 +129,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         }
     }
 
-    private fun initModelData() {
+    private fun initModelData() = Thread {
         moreDetailsModel.getInfoByArtistName(artistName)
-    }
+    }.start()
 }
