@@ -1,6 +1,5 @@
 package ayds.newyork.songinfo.moredetails.model.repository.external.nyt.article
 
-import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
 import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
 import ayds.newyork.songinfo.moredetails.model.repository.external.nyt.NytArticleService
 import retrofit2.Response
