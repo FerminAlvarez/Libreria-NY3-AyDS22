@@ -9,12 +9,8 @@ interface MoreDetailsController {
     fun setMoreDetailsView(moreDetailsView: MoreDetailsView)
 }
 
-internal class MoreDetailsControllerImpl(
-    private val moreDetailsModel: MoreDetailsModel
-) : MoreDetailsController {
-
+internal class MoreDetailsControllerImpl : MoreDetailsController {
     private lateinit var moreDetailsView: MoreDetailsView
-
 
     override fun setMoreDetailsView(moreDetailsView: MoreDetailsView) {
         this.moreDetailsView = moreDetailsView
