@@ -92,8 +92,8 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun updateArtistInfo(artistInfo: ArtistInfo) {
         updateUiState(artistInfo)
-        updateArtistInfoPanel()
         updateLogo()
+        updateArtistInfoPanel()
     }
 
     private fun updateUiState(artistInfo: ArtistInfo) {
