@@ -34,6 +34,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private val onActionSubject = Subject<MoreDetailsUiEvent>()
     private val artistInfoHelper: ArtistInfoHelper = MoreDetailsViewInjector.artistInfoHelper
     private lateinit var moreDetailsModel: MoreDetailsModel
+    private lateinit var artistName: String
     private lateinit var logoImageView: ImageView
     private lateinit var nytInfoPane: TextView
     private lateinit var openArticleButton: Button
@@ -43,7 +44,8 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     override var uiState: MoreDetailsUiState = MoreDetailsUiState()
 
     override fun openExternalLink(url: String) {
-        navigationUtils.openExternalUrl(this, url)
+        if(!url.isEmpty())
+            navigationUtils.openExternalUrl(this, url)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,14 +53,20 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         setContentView(R.layout.activity_other_info)
 
         initModule()
+        initStateProperty()
         initProperties()
         initListeners()
         initObservers()
+        initModelData()
     }
 
     private fun initModule() {
         MoreDetailsViewInjector.init(this)
         moreDetailsModel = MoreDetailsModelInjector.getMoreDetailsModel()
+    }
+
+    private fun initStateProperty(){
+        artistName = intent.getStringExtra(ARTIST_NAME_EXTRA) ?: ""
     }
 
     private fun initProperties() {
@@ -97,18 +105,15 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun updateArtistInfoUiState(artistInfo: ArtistInfo) {
         uiState = uiState.copy(
-            artistName = artistInfo.artistName,
             articleUrl = artistInfo.artistURL,
-            artistInfo = artistInfoHelper.getArtistInfoText(artistInfo),
-            logoUrl = uiState.logoUrl
+            artistInfo = artistInfoHelper.getArtistInfoText(artistInfo)
         )
     }
 
     private fun updateNoResultsUiState() {
         uiState = uiState.copy(
-            artistName = "",
-            articleUrl = "",
-            artistInfo = artistInfoHelper.getArtistInfoText()
+            articleUrl = MoreDetailsUiState.EMPTY_URL,
+            artistInfo = MoreDetailsUiState.EMPTY_INFO
         )
     }
 
@@ -122,5 +127,9 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         runOnUiThread {
             Picasso.get().load(uiState.logoUrl).into(logoImageView)
         }
+    }
+
+    private fun initModelData() {
+        moreDetailsModel.getInfoByArtistName(artistName)
     }
 }
