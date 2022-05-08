@@ -6,7 +6,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
-
 private const val NYT_API_URL = "https://api.nytimes.com/svc/search/v2/"
 
 internal class NytArticleServiceImpl(
@@ -27,6 +26,7 @@ internal class NytArticleServiceImpl(
             .build()
         return retrofit.create(NYTimesAPI::class.java)
     }
+
     private fun getArtistInfoFromService(query: String): Response<String?> {
         val response = nytimesAPI.getArtistInfo(query)
 

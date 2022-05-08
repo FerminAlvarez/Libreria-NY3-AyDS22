@@ -44,7 +44,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     override var uiState: MoreDetailsUiState = MoreDetailsUiState()
 
     override fun openExternalLink(url: String) {
-        if(url.isNotEmpty())
+        if (url.isNotEmpty())
             navigationUtils.openExternalUrl(this, url)
     }
 
@@ -65,7 +65,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         moreDetailsModel = MoreDetailsModelInjector.getMoreDetailsModel()
     }
 
-    private fun initStateProperty(){
+    private fun initStateProperty() {
         artistName = intent.getStringExtra(ARTIST_NAME_EXTRA) ?: ""
     }
 
@@ -119,7 +119,8 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun updateArtistInfoPanel() {
         runOnUiThread {
-            nytInfoPane.text = HtmlCompat.fromHtml(uiState.artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            nytInfoPane.text =
+                HtmlCompat.fromHtml(uiState.artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
         }
     }
 

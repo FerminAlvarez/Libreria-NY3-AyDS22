@@ -10,7 +10,6 @@ import ayds.newyork.songinfo.moredetails.model.repository.local.nyt.sqldb.Cursor
 import ayds.newyork.songinfo.moredetails.model.repository.local.nyt.sqldb.NytLocalStorageImpl
 import ayds.newyork.songinfo.moredetails.view.MoreDetailsView
 
-
 object MoreDetailsModelInjector {
 
     private lateinit var moreDetailsModel: MoreDetailsModel
