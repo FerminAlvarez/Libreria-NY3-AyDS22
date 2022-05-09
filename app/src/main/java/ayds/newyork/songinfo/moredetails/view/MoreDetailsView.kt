@@ -110,7 +110,6 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun updateArtistInfoUiState(artistInfo: ArtistInfo) {
         uiState = uiState.copy(
-            artistName = artistInfo.artistName,
             articleUrl = artistInfo.artistURL,
             artistInfo = artistInfoHelper.getArtistInfoText(artistInfo)
         )
