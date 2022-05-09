@@ -57,7 +57,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         initProperties()
         initListeners()
         initObservers()
-        initModelData()
+        notifySearchNytInfoAction()
     }
 
     private fun initModule() {
@@ -67,6 +67,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun initStateProperty() {
         artistName = intent.getStringExtra(ARTIST_NAME_EXTRA) ?: ""
+        uiState = uiState.copy(artistName = artistName)
     }
 
     private fun initProperties() {
@@ -79,6 +80,10 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         openArticleButton.setOnClickListener {
             notifyOpenArticleUrlAction()
         }
+    }
+
+    private fun notifySearchNytInfoAction() {
+        onActionSubject.notify(MoreDetailsUiEvent.SearchNytInfo)
     }
 
     private fun notifyOpenArticleUrlAction() {
@@ -105,6 +110,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun updateArtistInfoUiState(artistInfo: ArtistInfo) {
         uiState = uiState.copy(
+            artistName = artistInfo.artistName,
             articleUrl = artistInfo.artistURL,
             artistInfo = artistInfoHelper.getArtistInfoText(artistInfo)
         )
@@ -129,8 +135,4 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
             Picasso.get().load(uiState.logoUrl).into(logoImageView)
         }
     }
-
-    private fun initModelData() = Thread {
-        moreDetailsModel.getInfoByArtistName(artistName)
-    }.start()
 }
