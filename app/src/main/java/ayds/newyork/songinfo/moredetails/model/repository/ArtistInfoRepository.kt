@@ -27,11 +27,10 @@ internal class ArtistInfoRepositoryImpl(
                     artistInfo = nytArticleService.getArtistInfo(artist)
 
                     artistInfo?.let {
-                        if (!artistInfo.isSavedArticle())
-                            nytLocalStorage.saveArtist(it)
+                        nytLocalStorage.saveArtist(it)
                     }
                 } catch (e: Exception) {
-
+                    artistInfo = null
                 }
             }
         }
