@@ -43,6 +43,4 @@ internal class ArtistInfoRepositoryImpl(
     private fun markArticleAsLocal(article: NytArtistInfo) {
         article.isLocallyStored = true
     }
-
-
 }

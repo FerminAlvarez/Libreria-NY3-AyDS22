@@ -39,7 +39,6 @@ internal class JsonToArtistInfoResolver : NytToArtistInfoResolver {
         return result
     }
 
-
     private fun String?.getFirstItem(): JsonElement {
         val jobj = Gson().fromJson(this, JsonObject::class.java)
         val response = jobj[RESPONSE].asJsonObject
@@ -50,12 +49,9 @@ internal class JsonToArtistInfoResolver : NytToArtistInfoResolver {
 
     private fun JsonElement.getArtistUrl() = this.asJsonObject[SECTION_WEB_URL].asString
 
-    private fun abstractToString(abstractNYT: JsonElement?): String {
-        var artistInfoFromService = ""
-        abstractNYT?.let { artistInfoFromService = it.asString.replace("\\n", "\n") }
+    private fun abstractToString(abstractNYT: JsonElement?): String =
+        abstractNYT?.let { it.asString.replace("\\n", "\n") } ?: ""
 
-        return articleToHTML(artistInfoFromService)
-    }
 
     private fun articleToHTML(nytInfo: String): String {
         val builder = StringBuilder()

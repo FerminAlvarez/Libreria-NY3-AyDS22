@@ -19,8 +19,8 @@ internal class ArtistInfoHelperImpl : ArtistInfoHelper {
     }
 
     private fun formatArtistInfo(artistInfo: ArtistInfo): String {
-        val symbol = if (artistInfo.isLocallyStored) INFO_IN_DATABASE_SYMBOL else ""
-        return symbol + artistInfo.artistInfo
+        return (if (artistInfo.isLocallyStored) INFO_IN_DATABASE_SYMBOL else "") +
+                artistInfo.artistInfo
     }
 
 }
