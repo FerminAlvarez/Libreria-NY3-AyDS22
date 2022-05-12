@@ -22,7 +22,7 @@ internal class MoreDetailsControllerImpl(
 
     private val observer: Observer<MoreDetailsUiEvent> =
         Observer { value ->
-            when (value){
+            when (value) {
                 is MoreDetailsUiEvent.SearchNytInfo -> searchNytInfo()
                 is MoreDetailsUiEvent.OpenArticleUrl -> openArticle()
             }

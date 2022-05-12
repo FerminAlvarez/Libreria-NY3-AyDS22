@@ -1,6 +1,6 @@
 package ayds.newyork.songinfo.moredetails.view
 
-data class MoreDetailsUiState (
+data class MoreDetailsUiState(
     val artistName: String = "",
     val articleUrl: String = "",
     val artistInfo: String = "",

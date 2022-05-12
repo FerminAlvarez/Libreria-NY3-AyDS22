@@ -7,7 +7,7 @@ import com.google.gson.JsonObject
 import java.lang.StringBuilder
 
 interface NytToArtistInfoResolver {
-    fun getArtistInfoFromExternalData(serviceData: String?, artistName:String): NytArtistInfo?
+    fun getArtistInfoFromExternalData(serviceData: String?, artistName: String): NytArtistInfo?
 }
 
 private const val SECTION_DOCS = "docs"
@@ -17,25 +17,27 @@ private const val RESPONSE = "response"
 
 internal class JsonToArtistInfoResolver : NytToArtistInfoResolver {
 
-    private lateinit var artistName : String
+    private lateinit var artistName: String
 
-    override fun getArtistInfoFromExternalData(serviceData: String?, artistName:String): NytArtistInfo? {
+    override fun getArtistInfoFromExternalData(
+        serviceData: String?,
+        artistName: String
+    ): NytArtistInfo? {
         this.artistName = artistName
         val result =
-        try {
-            serviceData?.getFirstItem()?.let { item ->
-                NytArtistInfo(
-                    artistName,
-                    item.getArtistInfo(),
-                    item.getArtistUrl()
-                )
+            try {
+                serviceData?.getFirstItem()?.let { item ->
+                    NytArtistInfo(
+                        artistName,
+                        item.getArtistInfo(),
+                        item.getArtistUrl()
+                    )
+                }
+            } catch (e: Exception) {
+                null
             }
-        } catch (e: Exception) {
-            null
-        }
         return result
     }
-
 
 
     private fun String?.getFirstItem(): JsonElement {
