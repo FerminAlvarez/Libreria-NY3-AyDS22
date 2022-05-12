@@ -9,7 +9,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 private const val NYT_API_URL = "https://api.nytimes.com/svc/search/v2/"
 
 internal class NytArticleServiceImpl(
-    private val nytToArtistInfoResolver: NytToArtistInfoResolver = JsonToArtistInfoResolver()
+    private val nytToArtistInfoResolver: NytToArtistInfoResolver
 ) : NytArticleService {
 
     private val nytimesAPI: NYTimesAPI = createRetrofit()
