@@ -4,7 +4,6 @@ import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import java.lang.StringBuilder
 
 interface NytToArtistInfoResolver {
     fun getArtistInfoFromExternalData(serviceData: String?, artistName: String): NytArtistInfo?
@@ -51,18 +50,5 @@ internal class JsonToArtistInfoResolver : NytToArtistInfoResolver {
 
     private fun abstractToString(abstractNYT: JsonElement?): String =
         abstractNYT?.let { it.asString.replace("\\n", "\n") } ?: ""
-
-
-    private fun articleToHTML(nytInfo: String): String {
-        val builder = StringBuilder()
-        builder.append("<html><div width=400>")
-        builder.append("<font face=\"arial\">")
-        val textWithBold = nytInfo
-            .replace("'", " ")
-            .replace("\n", "<br>")
-            .replace("(?i)" + artistName.toRegex(), "<b>" + artistName.uppercase() + "</b>")
-        builder.append(textWithBold)
-        builder.append("</font></div></html>")
-        return builder.toString()
-    }
+    
 }
