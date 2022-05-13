@@ -20,7 +20,19 @@ internal class ArtistInfoHelperImpl : ArtistInfoHelper {
 
     private fun formatArtistInfo(artistInfo: ArtistInfo): String {
         return (if (artistInfo.isLocallyStored) INFO_IN_DATABASE_SYMBOL else "") +
-                artistInfo.artistInfo
+                articleToHTML(artistInfo)
     }
 
+    private fun articleToHTML(artistInfo: ArtistInfo): String {
+        val builder = StringBuilder()
+        builder.append("<html><div width=400>")
+        builder.append("<font face=\"arial\">")
+        val textWithBold = artistInfo.artistInfo
+            .replace("'", " ")
+            .replace("\n", "<br>")
+            .replace("(?i)" + artistInfo.artistName.toRegex(), "<b>" + artistInfo.artistName.uppercase() + "</b>")
+        builder.append(textWithBold)
+        builder.append("</font></div></html>")
+        return builder.toString()
+    }
 }
