@@ -18,7 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="ayds.newyork.songinfo.moredetails.fulllogic.OtherInfoWindow"
+        <activity android:name="ayds.newyork.songinfo.moredetails.view.MoreDetailsViewActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
     </application>
 
