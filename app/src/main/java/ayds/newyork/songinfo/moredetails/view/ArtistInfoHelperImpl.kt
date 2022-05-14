@@ -6,6 +6,10 @@ import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
 
 private const val INFO_IN_DATABASE_SYMBOL = "[*] \n"
 private const val ARTIST_INFO_NOT_FOUND = "Artist Info not found"
+private const val HEADER = "<html>"
+private const val WIDTH = "<div width=400>"
+private const val FONT = "<font face=\"arial\">"
+private const val FOOTER = "</font></div></html>"
 
 interface ArtistInfoHelper {
     fun getArtistInfoText(artistInfo: ArtistInfo = EmptyArtistInfo): String
@@ -19,20 +23,20 @@ internal class ArtistInfoHelperImpl : ArtistInfoHelper {
     }
 
     private fun formatArtistInfo(artistInfo: ArtistInfo): String {
-        return (if (artistInfo.isLocallyStored) INFO_IN_DATABASE_SYMBOL else "") +
-                articleToHTML(artistInfo)
+        return ("${if (artistInfo.isLocallyStored) INFO_IN_DATABASE_SYMBOL else "" } ${articleToHTML(artistInfo)}")
     }
 
     private fun articleToHTML(artistInfo: ArtistInfo): String {
         val builder = StringBuilder()
-        builder.append("<html><div width=400>")
-        builder.append("<font face=\"arial\">")
+        builder.append(HEADER)
+        builder.append(WIDTH)
+        builder.append(FONT)
         val textWithBold = artistInfo.artistInfo
             .replace("'", " ")
             .replace("\n", "<br>")
             .replace("(?i)" + artistInfo.artistName.toRegex(), "<b>" + artistInfo.artistName.uppercase() + "</b>")
         builder.append(textWithBold)
-        builder.append("</font></div></html>")
+        builder.append(FOOTER)
         return builder.toString()
     }
 }
