@@ -117,8 +117,8 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun updateNoResultsUiState() {
         uiState = uiState.copy(
-            articleUrl = MoreDetailsUiState.EMPTY_URL,
-            artistInfo = MoreDetailsUiState.EMPTY_INFO
+            articleUrl = "",
+            artistInfo = artistInfoHelper.getArtistInfoText()
         )
     }
 
