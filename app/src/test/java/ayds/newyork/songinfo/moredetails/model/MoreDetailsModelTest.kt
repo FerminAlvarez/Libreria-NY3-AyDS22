@@ -1,13 +1,10 @@
-package ayds.newyork.moredetails.model
+package ayds.newyork.songinfo.moredetails.model
 
-import ayds.newyork.songinfo.moredetails.model.MoreDetailsModel
-import ayds.newyork.songinfo.moredetails.model.MoreDetailsModelImpl
 import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
 import ayds.newyork.songinfo.moredetails.model.repository.ArtistInfoRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Assert
 import org.junit.Test
 
 class MoreDetailsModelTest {

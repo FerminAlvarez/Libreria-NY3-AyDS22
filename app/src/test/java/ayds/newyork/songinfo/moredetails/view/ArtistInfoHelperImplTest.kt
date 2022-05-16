@@ -1,8 +1,7 @@
-package ayds.newyork.moredetails.view
+package ayds.newyork.songinfo.moredetails.view
 
 import ayds.newyork.songinfo.moredetails.model.entities.EmptyArtistInfo
 import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
-import ayds.newyork.songinfo.moredetails.view.ArtistInfoHelperImpl
 import org.junit.Assert
 import org.junit.Test
 

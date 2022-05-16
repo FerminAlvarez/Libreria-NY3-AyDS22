@@ -1,6 +1,5 @@
-package ayds.newyork.moredetails.controller
+package ayds.newyork.songinfo.moredetails.controller
 
-import ayds.newyork.songinfo.moredetails.controller.MoreDetailsControllerImpl
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModel
 import ayds.newyork.songinfo.moredetails.view.MoreDetailsUiEvent
 import ayds.newyork.songinfo.moredetails.view.MoreDetailsUiState
