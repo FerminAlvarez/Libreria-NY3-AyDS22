@@ -36,6 +36,15 @@ class MoreDetailsControllerImplTest {
 
         onActionSubject.notify(MoreDetailsUiEvent.SearchNytInfo)
 
-        verify { moreDetailsModel.getInfoByArtistName("name")}
+        verify { moreDetailsModel.getInfoByArtistName("name") }
+    }
+
+    @Test
+    fun `on open article event should open external link`() {
+        every { moreDetailsView.uiState } returns MoreDetailsUiState(articleUrl = "url")
+
+        onActionSubject.notify(MoreDetailsUiEvent.OpenArticleUrl)
+
+        verify { moreDetailsView.openExternalLink("url") }
     }
 }
