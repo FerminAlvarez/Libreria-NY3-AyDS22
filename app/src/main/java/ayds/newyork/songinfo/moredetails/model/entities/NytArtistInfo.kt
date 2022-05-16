@@ -1,6 +1,5 @@
 package ayds.newyork.songinfo.moredetails.model.entities
 
-import com.google.gson.JsonElement
 
 interface ArtistInfo {
     val artistName: String
