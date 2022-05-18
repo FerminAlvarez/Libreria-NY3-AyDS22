@@ -4,7 +4,7 @@ import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
 import ayds.newyork.songinfo.moredetails.model.entities.EmptyArtistInfo
 import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
 
-private const val INFO_IN_DATABASE_SYMBOL = "[*] \n"
+private const val INFO_IN_DATABASE_SYMBOL = "[*]\n"
 private const val ARTIST_INFO_NOT_FOUND = "Artist Info not found"
 private const val HEADER = "<html>"
 private const val WIDTH = "<div width=400>"
@@ -23,7 +23,7 @@ internal class ArtistInfoHelperImpl : ArtistInfoHelper {
     }
 
     private fun formatArtistInfo(artistInfo: ArtistInfo): String {
-        return ("${if (artistInfo.isLocallyStored) INFO_IN_DATABASE_SYMBOL else "" } ${articleToHTML(artistInfo)}")
+        return ("${if (artistInfo.isLocallyStored) INFO_IN_DATABASE_SYMBOL else "" }${articleToHTML(artistInfo)}")
     }
 
     private fun articleToHTML(artistInfo: ArtistInfo): String {
