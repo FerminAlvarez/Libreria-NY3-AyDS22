@@ -15,44 +15,45 @@ class ArtistInfoRepositoryTest {
     private val nytArticleService: NytArticleService = mockk(relaxUnitFun = true)
 
     private val artistInfoRepository: ArtistInfoRepository by lazy {
-        ArtistInfoRepositoryImpl(nytLocalStorage,nytArticleService)
+        ArtistInfoRepositoryImpl(nytLocalStorage, nytArticleService)
     }
 
     @Test
-    fun `given non existing artist info by name should return empty artist info`(){
+    fun `given non existing artist info by name should return empty artist info`() {
         every { nytLocalStorage.getInfoByArtistName("name") } returns null
+        every { nytArticleService.getArtistInfo("name") } returns null
 
         val result = artistInfoRepository.getInfoByArtistName("name")
 
-        assertEquals(EmptyArtistInfo,result)
+        assertEquals(EmptyArtistInfo, result)
     }
 
     @Test
-    fun `given existing artist info by name should return artist info and mark it as local`(){
+    fun `given existing artist info by name should return artist info and mark it as local`() {
         val artistInfo = NytArtistInfo("name", "artist info", "artist URL")
         every { nytLocalStorage.getInfoByArtistName("name") } returns artistInfo
 
         val result = artistInfoRepository.getInfoByArtistName("name")
 
-        assertEquals(artistInfo,result)
+        assertEquals(artistInfo, result)
         assertTrue(artistInfo.isLocallyStored)
     }
 
     @Test
-    fun `given non existing artist info by name should get the info and store it`(){
+    fun `given non existing artist info by name should get the info and store it`() {
         val artistInfo = NytArtistInfo("name", "artist info", "artist URL")
         every { nytLocalStorage.getInfoByArtistName("name") } returns null
         every { nytArticleService.getArtistInfo("name") } returns artistInfo
 
         val result = artistInfoRepository.getInfoByArtistName("name")
 
-        assertEquals(artistInfo,result)
+        assertEquals(artistInfo, result)
         assertFalse(artistInfo.isLocallyStored)
         verify { nytLocalStorage.saveArtist(artistInfo) }
     }
 
     @Test
-    fun `given service exception should return empty artist info`(){
+    fun `given service exception should return empty artist info`() {
         every { nytLocalStorage.getInfoByArtistName("name") } returns null
         every { nytArticleService.getArtistInfo("name") } throws mockk<Exception>()
 
