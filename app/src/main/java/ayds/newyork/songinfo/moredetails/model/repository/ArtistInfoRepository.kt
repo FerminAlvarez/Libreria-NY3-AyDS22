@@ -37,9 +37,6 @@ internal class ArtistInfoRepositoryImpl(
         return artistInfo ?: EmptyArtistInfo
     }
 
-    private fun NytArtistInfo.isSavedArticle() =
-        nytLocalStorage.getInfoByArtistName(artistName) != null
-
     private fun markArticleAsLocal(article: NytArtistInfo) {
         article.isLocallyStored = true
     }
