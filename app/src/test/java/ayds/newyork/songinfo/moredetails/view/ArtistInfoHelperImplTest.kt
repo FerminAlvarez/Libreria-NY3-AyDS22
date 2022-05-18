@@ -7,6 +7,13 @@ import org.junit.Test
 
 class ArtistInfoHelperImplTest {
     private val artistInfoHelperImpl = ArtistInfoHelperImpl()
+    private var artistInfo = NytArtistInfo(
+        "Jimi Hendrix",
+        "One of the most lasting and influential artistic movements of the 20th century " +
+                "was created with and for Black artists." +
+                "Why has their contribution been so overlooked?",
+        "",
+    )
 
     @Test
     fun `given a EmptyArtistInfo it should return artist info not found`() {
@@ -21,14 +28,7 @@ class ArtistInfoHelperImplTest {
 
     @Test
     fun `given a ArtistInfo not locally stored it should return the info`() {
-        val artistInfo = NytArtistInfo(
-            "Jimi Hendrix",
-            "One of the most lasting and influential artistic movements of the 20th century " +
-                    "was created with and for Black artists." +
-                    "Why has their contribution been so overlooked?",
-            "https://www.nytimes.com/2022/02/10/t-magazine/black-psychedelia.html",
-            false
-        )
+        artistInfo.isLocallyStored = false
 
         val result = artistInfoHelperImpl.getArtistInfoText(artistInfo)
 
@@ -43,14 +43,7 @@ class ArtistInfoHelperImplTest {
 
     @Test
     fun `given a ArtistInfo locally stored it should return the info`() {
-        val artistInfo = NytArtistInfo(
-            "Jimi Hendrix",
-            "One of the most lasting and influential artistic movements of the 20th century " +
-                    "was created with and for Black artists." +
-                    "Why has their contribution been so overlooked?",
-            "https://www.nytimes.com/2022/02/10/t-magazine/black-psychedelia.html",
-            true
-        )
+        artistInfo.isLocallyStored = true
 
         val result = artistInfoHelperImpl.getArtistInfoText(artistInfo)
 
