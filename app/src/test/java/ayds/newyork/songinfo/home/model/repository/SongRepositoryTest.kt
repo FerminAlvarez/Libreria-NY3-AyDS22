@@ -42,8 +42,7 @@ class SongRepositoryTest {
 
     @Test
     fun `given existing song by term should return song and mark it as local`() {
-        val releaseDatePrecision: DatePrecision = mockk()
-        val song = SpotifySong("id", "name", "artist", "album", "date", releaseDatePrecision, "url", "image", false)
+        val song = SpotifySong("id", "name", "artist", "album", "date", DatePrecision.DAY, "url", "image", false)
         every { spotifyLocalStorage.getSongByTerm("term") } returns song
 
         val result = songRepository.getSongByTerm("term")
@@ -54,8 +53,7 @@ class SongRepositoryTest {
 
     @Test
     fun `given non existing song by term should get the song and store it`() {
-        val releaseDatePrecision: DatePrecision = mockk()
-        val song = SpotifySong("id", "name", "artist", "album", "date", releaseDatePrecision, "url", "image", false)
+        val song = SpotifySong("id", "name", "artist", "album", "date", DatePrecision.DAY, "url", "image", false)
         every { spotifyLocalStorage.getSongByTerm("term") } returns null
         every { spotifyTrackService.getSong("term") } returns song
         every { spotifyLocalStorage.getSongById("id") } returns null
@@ -69,8 +67,7 @@ class SongRepositoryTest {
 
     @Test
     fun `given existing song by different term should get the song and update it`() {
-        val releaseDatePrecision: DatePrecision = mockk()
-        val song = SpotifySong("id", "name", "artist", "album", "date", releaseDatePrecision, "url", "image", false)
+        val song = SpotifySong("id", "name", "artist", "album", "date", DatePrecision.DAY, "url", "image", false)
         every { spotifyLocalStorage.getSongByTerm("term") } returns null
         every { spotifyTrackService.getSong("term") } returns song
         every { spotifyLocalStorage.getSongById("id") } returns song
