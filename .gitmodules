@@ -1,0 +1,3 @@
+[submodule "libs/NewYorkTimesData"]
+	path = libs/NewYorkTimesData
+	url = https://github.com/FerminAlvarez/NY3-New-York-Times-Data.git
