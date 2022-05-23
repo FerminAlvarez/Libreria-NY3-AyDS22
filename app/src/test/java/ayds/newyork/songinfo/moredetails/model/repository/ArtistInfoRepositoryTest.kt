@@ -2,7 +2,7 @@ package ayds.newyork.songinfo.moredetails.model.repository
 
 import ayds.newyork.songinfo.moredetails.model.entities.EmptyArtistInfo
 import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
-import ayds.newyork.songinfo.moredetails.model.repository.external.nyt.NytArticleService
+import ayds.ny3.newyorktimes.NytArticleService
 import ayds.newyork.songinfo.moredetails.model.repository.local.nyt.NytLocalStorage
 import io.mockk.every
 import io.mockk.mockk
@@ -12,7 +12,7 @@ import org.junit.Test
 
 class ArtistInfoRepositoryTest {
     private val nytLocalStorage: NytLocalStorage = mockk(relaxUnitFun = true)
-    private val nytArticleService: NytArticleService = mockk(relaxUnitFun = true)
+    private val nytArticleService: ayds.ny3.newyorktimes.NytArticleService = mockk(relaxUnitFun = true)
 
     private val artistInfoRepository: ArtistInfoRepository by lazy {
         ArtistInfoRepositoryImpl(nytLocalStorage, nytArticleService)
