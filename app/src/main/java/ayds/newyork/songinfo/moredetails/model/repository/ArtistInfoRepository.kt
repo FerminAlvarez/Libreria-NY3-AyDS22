@@ -5,7 +5,7 @@ import ayds.newyork.songinfo.moredetails.model.entities.EmptyArtistInfo
 import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
 import ayds.newyork.songinfo.moredetails.model.repository.local.nyt.NytLocalStorage
 import ayds.ny3.newyorktimes.NytArticleService
-import ayds.ny3.newyorktimes.NytArtistInfo as ServiceNytArtistInfo
+import ayds.ny3.newyorktimes.Card as ServiceNytArtistInfo
 import java.lang.Exception
 
 interface ArtistInfoRepository {
@@ -29,9 +29,11 @@ internal class ArtistInfoRepositoryImpl(
 
                     serviceNytArtistInfo?.let {
                         artistInfo = NytArtistInfo(
-                            it.artistName,
-                            it.artistInfo,
-                            it.artistURL
+                            artist,
+                            it.description,
+                            it.infoURL,
+                            it.source,
+                            it.sourceLogoUrl
                         )
                     }
 

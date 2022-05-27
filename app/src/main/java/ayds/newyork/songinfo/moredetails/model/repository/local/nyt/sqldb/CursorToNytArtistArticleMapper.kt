@@ -17,7 +17,9 @@ internal class CursorToNytArtistArticleMapperImpl : CursorToNytArtistArticleMapp
                     NytArtistInfo(
                         artistName = getString(getColumnIndexOrThrow(ARTIST_COLUMN)),
                         artistInfo = getString(getColumnIndexOrThrow(INFO_COLUMN)),
-                        artistURL = getString(getColumnIndexOrThrow(URL_COLUMN))
+                        artistURL = getString(getColumnIndexOrThrow(URL_COLUMN)),
+                        source = getString(getColumnIndexOrThrow(SOURCE_COLUMN)),
+                        sourceLogoUrl = getString(getColumnIndexOrThrow(SOURCE_LOGO_URL_COLUMN)),
                     )
                 } else {
                     null

@@ -17,7 +17,18 @@ class NytLocalStorageImpl(
     context: Context,
     private val cursorToNytArtistArticleMapper: CursorToNytArtistArticleMapper
 ) :
-    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION), NytLocalStorage {
+    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION),
+    NytLocalStorage {
+
+    private val projection = arrayOf(
+        ID_COLUMN,
+        ARTIST_COLUMN,
+        INFO_COLUMN,
+        SOURCE_COLUMN,
+        SOURCE_LOGO_URL_COLUMN,
+        URL_COLUMN
+    )
+
     override fun onCreate(database: SQLiteDatabase) {
         createArtistsTable(database)
     }
@@ -28,15 +39,17 @@ class NytLocalStorageImpl(
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
     override fun saveArtist(artist: NytArtistInfo) {
-        val newArtist = setArtistValues(artist.artistName, artist.artistInfo, artist.artistURL)
+        val newArtist = setArtistValues(artist)
         insertNewArtist(newArtist)
     }
 
-    private fun setArtistValues(artist: String, info: String, artistURL: String): ContentValues {
+    private fun setArtistValues(artist: NytArtistInfo): ContentValues {
         val values = ContentValues()
-        values.put(ARTIST_COLUMN, artist)
-        values.put(INFO_COLUMN, info)
-        values.put(URL_COLUMN, artistURL)
+        values.put(ARTIST_COLUMN, artist.artistName)
+        values.put(INFO_COLUMN, artist.artistInfo)
+        values.put(URL_COLUMN, artist.artistURL)
+        values.put(SOURCE_COLUMN, artist.source)
+        values.put(SOURCE_LOGO_URL_COLUMN, artist.sourceLogoUrl)
         return values
     }
 
@@ -52,7 +65,6 @@ class NytLocalStorageImpl(
 
     private fun getCursor(artist: String): Cursor {
         val database = this.readableDatabase
-        val projection = arrayOf(ID_COLUMN, ARTIST_COLUMN, INFO_COLUMN, URL_COLUMN)
         val selectionArgs = arrayOf(artist)
         return database.query(
             ARTISTS_TABLE,

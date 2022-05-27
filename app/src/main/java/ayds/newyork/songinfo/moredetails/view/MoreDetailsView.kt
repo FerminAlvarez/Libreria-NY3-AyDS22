@@ -36,7 +36,8 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private lateinit var moreDetailsModel: MoreDetailsModel
     private lateinit var artistName: String
     private lateinit var logoImageView: ImageView
-    private lateinit var nytInfoPane: TextView
+    private lateinit var infoPane: TextView
+    private lateinit var sourcePane: TextView
     private lateinit var openArticleButton: Button
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
@@ -73,7 +74,8 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private fun initProperties() {
         openArticleButton = findViewById(R.id.openUrlButton)
         logoImageView = findViewById(R.id.imageView)
-        nytInfoPane = findViewById(R.id.nytInfoPane)
+        infoPane = findViewById(R.id.infoPane)
+        sourcePane = findViewById(R.id.infoSourcePane)
     }
 
     private fun initListeners() {
@@ -97,7 +99,8 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun updateArtistInfo(artistInfo: ArtistInfo) {
         updateUiState(artistInfo)
-        updateLogo()
+        updateSourceLogo()
+        updateSourceName()
         updateArtistInfoPanel()
     }
 
@@ -111,27 +114,38 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private fun updateArtistInfoUiState(artistInfo: ArtistInfo) {
         uiState = uiState.copy(
             articleUrl = artistInfo.artistURL,
-            artistInfo = artistInfoHelper.getArtistInfoText(artistInfo)
+            artistInfo = artistInfoHelper.getArtistInfoText(artistInfo),
+            source = artistInfo.source,
+            sourceLogoUrl = artistInfo.sourceLogoUrl
         )
     }
 
     private fun updateNoResultsUiState() {
         uiState = uiState.copy(
             articleUrl = "",
-            artistInfo = artistInfoHelper.getArtistInfoText()
+            artistInfo = artistInfoHelper.getArtistInfoText(),
+            source = "Sourceless?",
+            sourceLogoUrl = MoreDetailsUiState.DEFAULT_LOGO
         )
     }
 
     private fun updateArtistInfoPanel() {
         runOnUiThread {
-            nytInfoPane.text =
+            infoPane.text =
                 HtmlCompat.fromHtml(uiState.artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
         }
     }
 
-    private fun updateLogo() {
+    private fun updateSourceLogo() {
         runOnUiThread {
-            Picasso.get().load(uiState.logoUrl).into(logoImageView)
+            Picasso.get().load(uiState.sourceLogoUrl).into(logoImageView)
+        }
+    }
+
+    private fun updateSourceName() {
+        runOnUiThread {
+            val source = uiState.source
+            this.sourcePane.text = "Source: $source"
         }
     }
 }
