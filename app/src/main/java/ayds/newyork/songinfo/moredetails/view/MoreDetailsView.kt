@@ -129,13 +129,6 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         )
     }
 
-    private fun updateArtistInfoPanel() {
-        runOnUiThread {
-            infoPane.text =
-                HtmlCompat.fromHtml(uiState.artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
-        }
-    }
-
     private fun updateSourceLogo() {
         runOnUiThread {
             Picasso.get().load(uiState.sourceLogoUrl).into(logoImageView)
@@ -146,6 +139,13 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         runOnUiThread {
             val source = uiState.source
             this.sourcePane.text = "Source: $source"
+        }
+    }
+
+    private fun updateArtistInfoPanel() {
+        runOnUiThread {
+            infoPane.text =
+                HtmlCompat.fromHtml(uiState.artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
         }
     }
 }
