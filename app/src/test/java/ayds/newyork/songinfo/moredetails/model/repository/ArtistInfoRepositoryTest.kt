@@ -12,7 +12,7 @@ import org.junit.Test
 
 class ArtistInfoRepositoryTest {
     private val nytLocalStorage: NytLocalStorage = mockk(relaxUnitFun = true)
-    private val nytArticleService: ayds.ny3.newyorktimes.NytArticleService = mockk(relaxUnitFun = true)
+    private val nytArticleService: NytArticleService = mockk(relaxUnitFun = true)
 
     private val artistInfoRepository: ArtistInfoRepository by lazy {
         ArtistInfoRepositoryImpl(nytLocalStorage, nytArticleService)

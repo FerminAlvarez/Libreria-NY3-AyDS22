@@ -138,7 +138,8 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private fun updateSourceName() {
         runOnUiThread {
             val source = uiState.source
-            this.sourcePane.text = "Source: $source"
+            val sourceText = "Source: $source"
+            this.sourcePane.text = sourceText
         }
     }
 
