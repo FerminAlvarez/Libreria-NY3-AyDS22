@@ -38,6 +38,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private lateinit var logoImageView: ImageView
     private lateinit var nytInfoPane: TextView
     private lateinit var openArticleButton: Button
+    private lateinit var nytInfoSourcePane: TextView
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
     override val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
@@ -74,6 +75,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         openArticleButton = findViewById(R.id.openUrlButton)
         logoImageView = findViewById(R.id.imageView)
         nytInfoPane = findViewById(R.id.nytInfoPane)
+        nytInfoSourcePane = findViewById(R.id.nytInfoSourcePane)
     }
 
     private fun initListeners() {
@@ -99,6 +101,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         updateUiState(artistInfo)
         updateLogo()
         updateArtistInfoPanel()
+        updateArtistInfoSourcePanel()
     }
 
     private fun updateUiState(artistInfo: ArtistInfo) {
@@ -126,6 +129,12 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         runOnUiThread {
             nytInfoPane.text =
                 HtmlCompat.fromHtml(uiState.artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        }
+    }
+
+    private fun updateArtistInfoSourcePanel() {
+        runOnUiThread {
+            nytInfoSourcePane.text = "SOURCE_PLACEHOLDER"
         }
     }
 
