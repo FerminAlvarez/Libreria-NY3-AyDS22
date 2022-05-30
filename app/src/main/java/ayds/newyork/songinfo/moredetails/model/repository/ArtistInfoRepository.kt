@@ -3,9 +3,8 @@ package ayds.newyork.songinfo.moredetails.model.repository
 import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
 import ayds.newyork.songinfo.moredetails.model.entities.EmptyCard
+import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoBroker
 import ayds.newyork.songinfo.moredetails.model.repository.local.card.LocalStorage
-import ayds.ny3.newyorktimes.NytArticleService
-import ayds.ny3.newyorktimes.NytCard
 
 interface ArtistInfoRepository {
     fun getInfoByArtistName(artist: String): Card
@@ -13,7 +12,7 @@ interface ArtistInfoRepository {
 
 internal class ArtistInfoRepositoryImpl(
     private val localStorage: LocalStorage,
-    private val nytArticleService: NytArticleService
+    private val infoBroker: InfoBroker
 ) : ArtistInfoRepository {
 
 
@@ -23,18 +22,15 @@ internal class ArtistInfoRepositoryImpl(
         when {
             artistCard != null -> markArticleAsLocal(artistCard)
             else -> {
-                try {
-                    val serviceNytArtistInfo = nytArticleService.getArtistInfo(artist)
+                val infoList = infoBroker.getInfoByArtistName(artist)
 
-                    serviceNytArtistInfo?.let {
-                        artistCard = createArtistInfo(it)
-                    }
-
-                    artistCard?.let {
-                        localStorage.saveArtist(it, artist)
-                    }
-                } catch (e: Exception) {
+                if (infoList.isEmpty())
                     artistCard = null
+                else
+                    artistCard = infoList.first()
+
+                artistCard?.let {
+                    localStorage.saveArtist(it, artist)
                 }
             }
         }
@@ -44,13 +40,4 @@ internal class ArtistInfoRepositoryImpl(
     private fun markArticleAsLocal(article: CardImpl) {
         article.isLocallyStored = true
     }
-
-    private fun createArtistInfo(card: NytCard) =
-        CardImpl(
-            card.description,
-            card.infoURL,
-            card.source,
-            card.sourceLogoUrl,
-            false
-        )
 }
