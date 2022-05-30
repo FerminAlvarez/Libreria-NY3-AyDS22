@@ -9,9 +9,7 @@ import androidx.core.text.HtmlCompat
 import ayds.newyork.songinfo.R
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModel
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModelInjector
-import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
-import ayds.newyork.songinfo.moredetails.model.entities.EmptyArtistInfo
-import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
+import ayds.newyork.songinfo.moredetails.model.entities.*
 import ayds.newyork.songinfo.utils.UtilsInjector
 import ayds.newyork.songinfo.utils.navigation.NavigationUtils
 import ayds.observer.Observable
@@ -97,24 +95,24 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
             .subscribe { value -> this.updateArtistInfo(value) }
     }
 
-    private fun updateArtistInfo(artistInfo: ArtistInfo) {
+    private fun updateArtistInfo(artistInfo: Card) {
         updateUiState(artistInfo)
         updateSourceLogo()
         updateSourceName()
         updateArtistInfoPanel()
     }
 
-    private fun updateUiState(artistInfo: ArtistInfo) {
+    private fun updateUiState(artistInfo: Card) {
         when (artistInfo) {
-            is NytArtistInfo -> updateArtistInfoUiState(artistInfo)
-            EmptyArtistInfo -> updateNoResultsUiState()
+            is CardImpl -> updateArtistInfoUiState(artistInfo)
+            EmptyCard -> updateNoResultsUiState()
         }
     }
 
-    private fun updateArtistInfoUiState(artistInfo: ArtistInfo) {
+    private fun updateArtistInfoUiState(artistInfo: Card) {
         uiState = uiState.copy(
-            articleUrl = artistInfo.artistURL,
-            artistInfo = artistInfoHelper.getArtistInfoText(artistInfo),
+            articleUrl = artistInfo.infoURL,
+            artistInfo = artistInfoHelper.getArtistInfoText(artistInfo, uiState.artistName),
             source = artistInfo.source,
             sourceLogoUrl = artistInfo.sourceLogoUrl
         )

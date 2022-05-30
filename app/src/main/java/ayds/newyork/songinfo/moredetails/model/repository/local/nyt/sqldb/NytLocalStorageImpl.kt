@@ -1,11 +1,11 @@
 package ayds.newyork.songinfo.moredetails.model.repository.local.nyt.sqldb
 
-import android.database.sqlite.SQLiteOpenHelper
-import android.database.sqlite.SQLiteDatabase
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteOpenHelper
+import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
 import ayds.newyork.songinfo.moredetails.model.repository.local.nyt.NytLocalStorage
 
 const val DATABASE_NAME = "dictionary.db"
@@ -38,16 +38,16 @@ class NytLocalStorageImpl(
 
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
-    override fun saveArtist(artist: NytArtistInfo) {
-        val newArtist = setArtistValues(artist)
+    override fun saveArtist(artist: CardImpl, artistName: String) {
+        val newArtist = setArtistValues(artist, artistName)
         insertNewArtist(newArtist)
     }
 
-    private fun setArtistValues(artist: NytArtistInfo): ContentValues {
+    private fun setArtistValues(artist: CardImpl, artistName: String): ContentValues {
         val values = ContentValues()
-        values.put(ARTIST_COLUMN, artist.artistName)
-        values.put(INFO_COLUMN, artist.artistInfo)
-        values.put(URL_COLUMN, artist.artistURL)
+        values.put(ARTIST_COLUMN, artistName)
+        values.put(INFO_COLUMN, artist.description)
+        values.put(URL_COLUMN, artist.infoURL)
         values.put(SOURCE_COLUMN, artist.source)
         values.put(SOURCE_LOGO_URL_COLUMN, artist.sourceLogoUrl)
         return values
@@ -58,7 +58,7 @@ class NytLocalStorageImpl(
         database.insert(ARTISTS_TABLE, null, artist)
     }
 
-    override fun getInfoByArtistName(artist: String): NytArtistInfo? {
+    override fun getInfoByArtistName(artist: String): CardImpl? {
         val cursor = getCursor(artist)
         return cursorToNytArtistArticleMapper.map(cursor)
     }

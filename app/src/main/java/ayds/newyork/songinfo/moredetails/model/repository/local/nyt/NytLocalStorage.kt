@@ -1,9 +1,9 @@
 package ayds.newyork.songinfo.moredetails.model.repository.local.nyt
 
-import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
+import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
 
 interface NytLocalStorage {
-    fun saveArtist(artist: NytArtistInfo)
+    fun saveArtist(artist: CardImpl, artistName: String)
 
-    fun getInfoByArtistName(artist: String): NytArtistInfo?
+    fun getInfoByArtistName(artist: String): CardImpl?
 }
