@@ -23,12 +23,12 @@ internal class MoreDetailsControllerImpl(
     private val observer: Observer<MoreDetailsUiEvent> =
         Observer { value ->
             when (value) {
-                is MoreDetailsUiEvent.SearchNytInfo -> searchNytInfo()
+                is MoreDetailsUiEvent.SearchInfo -> searchInfo()
                 is MoreDetailsUiEvent.OpenArticleUrl -> openArticle()
             }
         }
 
-    private fun searchNytInfo() {
+    private fun searchInfo() {
         Thread {
             moreDetailsModel.getInfoByArtistName(moreDetailsView.uiState.artistName)
         }.start()

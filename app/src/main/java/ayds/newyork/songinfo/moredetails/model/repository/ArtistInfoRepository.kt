@@ -3,7 +3,7 @@ package ayds.newyork.songinfo.moredetails.model.repository
 import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
 import ayds.newyork.songinfo.moredetails.model.entities.EmptyCard
-import ayds.newyork.songinfo.moredetails.model.repository.local.nyt.NytLocalStorage
+import ayds.newyork.songinfo.moredetails.model.repository.local.card.LocalStorage
 import ayds.ny3.newyorktimes.NytArticleService
 import ayds.ny3.newyorktimes.NytCard
 
@@ -12,7 +12,7 @@ interface ArtistInfoRepository {
 }
 
 internal class ArtistInfoRepositoryImpl(
-    private val localStorage: NytLocalStorage,
+    private val localStorage: LocalStorage,
     private val nytArticleService: NytArticleService
 ) : ArtistInfoRepository {
 
@@ -27,7 +27,7 @@ internal class ArtistInfoRepositoryImpl(
                     val serviceNytArtistInfo = nytArticleService.getArtistInfo(artist)
 
                     serviceNytArtistInfo?.let {
-                        artistCard = createNytArtistInfo(it)
+                        artistCard = createArtistInfo(it)
                     }
 
                     artistCard?.let {
@@ -45,7 +45,7 @@ internal class ArtistInfoRepositoryImpl(
         article.isLocallyStored = true
     }
 
-    private fun createNytArtistInfo(card: NytCard) =
+    private fun createArtistInfo(card: NytCard) =
         CardImpl(
             card.description,
             card.infoURL,

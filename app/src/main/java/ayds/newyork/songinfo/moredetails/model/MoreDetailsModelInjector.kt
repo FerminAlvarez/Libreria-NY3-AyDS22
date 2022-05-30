@@ -3,11 +3,11 @@ package ayds.newyork.songinfo.moredetails.model
 import android.content.Context
 import ayds.newyork.songinfo.moredetails.model.repository.ArtistInfoRepository
 import ayds.newyork.songinfo.moredetails.model.repository.ArtistInfoRepositoryImpl
-import ayds.ny3.newyorktimes.NytArticleService
-import ayds.newyork.songinfo.moredetails.model.repository.local.nyt.NytLocalStorage
-import ayds.newyork.songinfo.moredetails.model.repository.local.nyt.sqldb.CursorToNytArtistArticleMapperImpl
-import ayds.newyork.songinfo.moredetails.model.repository.local.nyt.sqldb.NytLocalStorageImpl
+import ayds.newyork.songinfo.moredetails.model.repository.local.card.LocalStorage
+import ayds.newyork.songinfo.moredetails.model.repository.local.card.sqldb.CursorToArtistArticleMapperImpl
+import ayds.newyork.songinfo.moredetails.model.repository.local.card.sqldb.LocalStorageImpl
 import ayds.newyork.songinfo.moredetails.view.MoreDetailsView
+import ayds.ny3.newyorktimes.NytArticleService
 
 object MoreDetailsModelInjector {
 
@@ -16,13 +16,14 @@ object MoreDetailsModelInjector {
     fun getMoreDetailsModel(): MoreDetailsModel = moreDetailsModel
 
     fun initMoreDetailsModel(moreDetailsView: MoreDetailsView) {
-        val nytLocalStorage: NytLocalStorage = NytLocalStorageImpl(
-            moreDetailsView as Context, CursorToNytArtistArticleMapperImpl()
+        val localStorage: LocalStorage = LocalStorageImpl(
+            moreDetailsView as Context, CursorToArtistArticleMapperImpl()
         )
-        val nytArticleService: NytArticleService = ayds.ny3.newyorktimes.NytInjector.nytArticleService
+        val nytArticleService: NytArticleService =
+            ayds.ny3.newyorktimes.NytInjector.nytArticleService
 
         val repository: ArtistInfoRepository =
-            ArtistInfoRepositoryImpl(nytLocalStorage, nytArticleService)
+            ArtistInfoRepositoryImpl(localStorage, nytArticleService)
 
         moreDetailsModel = MoreDetailsModelImpl(repository)
     }

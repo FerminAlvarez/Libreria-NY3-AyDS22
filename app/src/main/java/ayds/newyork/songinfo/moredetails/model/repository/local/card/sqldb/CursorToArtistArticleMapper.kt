@@ -1,14 +1,14 @@
-package ayds.newyork.songinfo.moredetails.model.repository.local.nyt.sqldb
+package ayds.newyork.songinfo.moredetails.model.repository.local.card.sqldb
 
 import android.database.Cursor
 import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
 import java.sql.SQLException
 
-interface CursorToNytArtistArticleMapper {
+interface CursorToArtistArticleMapper {
     fun map(cursor: Cursor): CardImpl?
 }
 
-internal class CursorToNytArtistArticleMapperImpl : CursorToNytArtistArticleMapper {
+internal class CursorToArtistArticleMapperImpl : CursorToArtistArticleMapper {
 
     override fun map(cursor: Cursor): CardImpl? =
         try {

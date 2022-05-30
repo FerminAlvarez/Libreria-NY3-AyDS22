@@ -56,7 +56,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         initProperties()
         initListeners()
         initObservers()
-        notifySearchNytInfoAction()
+        notifySearchInfoAction()
     }
 
     private fun initModule() {
@@ -82,8 +82,8 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         }
     }
 
-    private fun notifySearchNytInfoAction() {
-        onActionSubject.notify(MoreDetailsUiEvent.SearchNytInfo)
+    private fun notifySearchInfoAction() {
+        onActionSubject.notify(MoreDetailsUiEvent.SearchInfo)
     }
 
     private fun notifyOpenArticleUrlAction() {
