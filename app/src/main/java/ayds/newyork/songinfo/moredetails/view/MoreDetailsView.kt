@@ -71,9 +71,9 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun initProperties() {
         openArticleButton = findViewById(R.id.openUrlButton)
-        logoImageView = findViewById(R.id.imageView)
-        infoPane = findViewById(R.id.infoPane)
-        sourcePane = findViewById(R.id.infoSourcePane)
+        logoImageView = findViewById(R.id.nytImageView)
+        infoPane = findViewById(R.id.nytInfoPane)
+        sourcePane = findViewById(R.id.nytInfoSourcePane)
     }
 
     private fun initListeners() {
