@@ -32,6 +32,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private val onActionSubject = Subject<MoreDetailsUiEvent>()
     private val artistInfoHelper: ArtistInfoHelper = MoreDetailsViewInjector.artistInfoHelper
     private lateinit var moreDetailsModel: MoreDetailsModel
+    private lateinit var sourceMapper: SourceMapper
     private lateinit var artistName: String
     private lateinit var logoImageView: ImageView
     private lateinit var infoPane: TextView
@@ -62,6 +63,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private fun initModule() {
         MoreDetailsViewInjector.init(this)
         moreDetailsModel = MoreDetailsModelInjector.getMoreDetailsModel()
+        sourceMapper = MoreDetailsViewInjector.getSourceMapper()
     }
 
     private fun initStateProperty() {
@@ -113,7 +115,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         uiState = uiState.copy(
             articleUrl = artistInfo.infoURL,
             artistInfo = artistInfoHelper.getArtistInfoText(artistInfo, uiState.artistName),
-            source = artistInfo.source,
+            source = sourceMapper.getSource(artistInfo.source),
             sourceLogoUrl = artistInfo.sourceLogoUrl
         )
     }

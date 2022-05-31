@@ -3,10 +3,10 @@ package ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.newyorkt
 import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
 import ayds.newyork.songinfo.moredetails.model.entities.EmptyCard
+import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import ayds.ny3.newyorktimes.NytArticleService
 import ayds.ny3.newyorktimes.NytArtistInfo
 
-private const val SOURCE = "The New York Times"
 private const val NYT_LOGO = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU"
 
 interface NytProxy {
@@ -35,7 +35,7 @@ internal class NytProxyImpl(
         CardImpl(
             nytArtistInfo.artistInfo,
             nytArtistInfo.artistURL,
-            SOURCE,
+            InfoSource.NEW_YORK_TIMES,
             NYT_LOGO,
             false
         )

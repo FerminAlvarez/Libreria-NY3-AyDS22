@@ -12,4 +12,6 @@ object MoreDetailsViewInjector {
         MoreDetailsControllerInjector.onViewStarted(moreDetailsView)
     }
 
+    fun getSourceMapper(): SourceMapper = SourceMapper()
+
 }

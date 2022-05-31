@@ -48,7 +48,7 @@ class LocalStorageImpl(
         values.put(ARTIST_COLUMN, artistName)
         values.put(INFO_COLUMN, artist.description)
         values.put(URL_COLUMN, artist.infoURL)
-        values.put(SOURCE_COLUMN, artist.source)
+        values.put(SOURCE_COLUMN, artist.source.ordinal)
         values.put(SOURCE_LOGO_URL_COLUMN, artist.sourceLogoUrl)
         return values
     }
