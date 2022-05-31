@@ -2,12 +2,12 @@ package ayds.newyork.songinfo.moredetails.model.repository
 
 import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
-import ayds.newyork.songinfo.moredetails.model.entities.EmptyCard
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoBroker
 import ayds.newyork.songinfo.moredetails.model.repository.local.card.LocalStorage
+import java.util.*
 
 interface ArtistInfoRepository {
-    fun getInfoByArtistName(artist: String): Card
+    fun getInfoByArtistName(artist: String): List<Card>
 }
 
 internal class ArtistInfoRepositoryImpl(
@@ -16,8 +16,9 @@ internal class ArtistInfoRepositoryImpl(
 ) : ArtistInfoRepository {
 
 
-    override fun getInfoByArtistName(artist: String): Card {
+    override fun getInfoByArtistName(artist: String): LinkedList<Card> {
         var artistCard = localStorage.getInfoByArtistName(artist)
+        val artistCardResult = LinkedList<Card>()
 
         when {
             artistCard != null -> markArticleAsLocal(artistCard)
@@ -34,7 +35,10 @@ internal class ArtistInfoRepositoryImpl(
                 }
             }
         }
-        return artistCard ?: EmptyCard
+        artistCard?.let {
+            artistCardResult.add(artistCard)
+        }
+        return artistCardResult
     }
 
     private fun markArticleAsLocal(article: CardImpl) {

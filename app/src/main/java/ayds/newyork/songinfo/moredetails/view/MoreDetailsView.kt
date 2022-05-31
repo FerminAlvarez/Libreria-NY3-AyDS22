@@ -1,6 +1,7 @@
 package ayds.newyork.songinfo.moredetails.view
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -33,9 +34,9 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private val artistInfoHelper: ArtistInfoHelper = MoreDetailsViewInjector.artistInfoHelper
     private lateinit var moreDetailsModel: MoreDetailsModel
     private lateinit var artistName: String
-    private lateinit var logoImageView: ImageView
-    private lateinit var infoPane: TextView
-    private lateinit var sourcePane: TextView
+    private lateinit var logoImageView: ArrayList<ImageView>
+    private lateinit var infoPane: ArrayList<TextView>
+    private lateinit var sourcePane: ArrayList<TextView>
     private lateinit var openArticleButton: Button
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
@@ -71,9 +72,21 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun initProperties() {
         openArticleButton = findViewById(R.id.openUrlButton)
-        logoImageView = findViewById(R.id.nytImageView)
-        infoPane = findViewById(R.id.nytInfoPane)
-        sourcePane = findViewById(R.id.nytInfoSourcePane)
+        logoImageView = arrayListOf(
+            findViewById(R.id.nytImageView),
+            findViewById(R.id.imageView2),
+            findViewById(R.id.imageView3)
+        )
+        infoPane = arrayListOf(
+            findViewById(R.id.nytInfoPane),
+            findViewById(R.id.infoPane2),
+            findViewById(R.id.infoPane3)
+        )
+        sourcePane = arrayListOf(
+            findViewById(R.id.nytInfoSourcePane),
+            findViewById(R.id.infoSourcePane2),
+            findViewById(R.id.infoSourcePane3)
+        )
     }
 
     private fun initListeners() {
@@ -95,11 +108,13 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
             .subscribe { value -> this.updateArtistInfo(value) }
     }
 
-    private fun updateArtistInfo(artistInfo: Card) {
-        updateUiState(artistInfo)
-        updateSourceLogo()
-        updateSourceName()
-        updateArtistInfoPanel()
+    private fun updateArtistInfo(artistInfoResult: List<Card>) {
+        for((cardNumber, artistInfo) in artistInfoResult.withIndex()) {
+            updateUiState(artistInfo)
+            updateSourceLogo(cardNumber)
+            updateSourceName(cardNumber)
+            updateArtistInfoPanel(cardNumber)
+        }
     }
 
     private fun updateUiState(artistInfo: Card) {
@@ -127,24 +142,27 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         )
     }
 
-    private fun updateSourceLogo() {
+    private fun updateSourceLogo(selectedCard: Int) {
         runOnUiThread {
-            Picasso.get().load(uiState.sourceLogoUrl).into(logoImageView)
+            Picasso.get().load(uiState.sourceLogoUrl).into(logoImageView[selectedCard])
+            logoImageView[selectedCard].visibility = View.VISIBLE
         }
     }
 
-    private fun updateSourceName() {
+    private fun updateSourceName(selectedCard: Int) {
         runOnUiThread {
             val source = uiState.source
             val sourceText = "Source: $source"
-            this.sourcePane.text = sourceText
+            this.sourcePane[selectedCard].text = sourceText
+            this.sourcePane[selectedCard].visibility = View.VISIBLE
         }
     }
 
-    private fun updateArtistInfoPanel() {
+    private fun updateArtistInfoPanel(selectedCard: Int) {
         runOnUiThread {
-            infoPane.text =
+            infoPane[selectedCard].text =
                 HtmlCompat.fromHtml(uiState.artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            infoPane[selectedCard].visibility = View.VISIBLE
         }
     }
 }

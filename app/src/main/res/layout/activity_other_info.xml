@@ -24,6 +24,7 @@
             <ImageView
                 android:id="@+id/nytImageView"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="203dp"
                 android:layout_margin="16dp"
                 android:contentDescription="Logo from the source" />
@@ -32,6 +33,7 @@
                 android:id="@+id/nytInfoSourcePane"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:gravity="center"
                 android:layout_marginBottom="16dp" />
 
@@ -45,6 +47,7 @@
                     android:id="@+id/nytInfoPane"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:autoLink="web"
                     android:linksClickable="true"
                     android:padding="16dp" />
@@ -55,12 +58,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="203dp"
                 android:layout_margin="16dp"
+                android:visibility="gone"
                 android:contentDescription="Logo from the source" />
 
             <TextView
                 android:id="@+id/infoSourcePane2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:gravity="center"
                 android:layout_marginBottom="16dp" />
 
@@ -73,6 +78,7 @@
                     android:id="@+id/infoPane2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:autoLink="web"
                     android:linksClickable="true"
                     android:padding="16dp" />
@@ -83,12 +89,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="203dp"
                 android:layout_margin="16dp"
+                android:visibility="gone"
                 android:contentDescription="Logo from the source" />
 
             <TextView
                 android:id="@+id/infoSourcePane3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:gravity="center"
                 android:layout_marginBottom="16dp" />
 
@@ -101,6 +109,7 @@
                     android:id="@+id/infoPane3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:autoLink="web"
                     android:linksClickable="true"
                     android:padding="16dp" />
