@@ -5,7 +5,7 @@ import ayds.newyork.songinfo.moredetails.model.repository.ArtistInfoRepository
 import ayds.newyork.songinfo.moredetails.model.repository.ArtistInfoRepositoryImpl
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoBroker
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoBrokerImpl
-import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.newyorktimes.ServiceProxy
+import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.ServiceProxy
 import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.newyorktimes.NytProxyImpl
 import ayds.newyork.songinfo.moredetails.model.repository.local.card.LocalStorage
 import ayds.newyork.songinfo.moredetails.model.repository.local.card.sqldb.CursorToArtistArticleMapperImpl
@@ -13,6 +13,7 @@ import ayds.newyork.songinfo.moredetails.model.repository.local.card.sqldb.Local
 import ayds.newyork.songinfo.moredetails.view.MoreDetailsView
 import ayds.ny3.newyorktimes.NytArticleService
 import ayds.ny3.newyorktimes.NytInjector
+import java.util.*
 
 object MoreDetailsModelInjector {
 
@@ -24,11 +25,14 @@ object MoreDetailsModelInjector {
         val localStorage: LocalStorage = LocalStorageImpl(
             moreDetailsView as Context, CursorToArtistArticleMapperImpl()
         )
-        val nytArticleService: NytArticleService = NytInjector.nytArticleService
+        val proxyList = LinkedList<ServiceProxy>()
 
+        val nytArticleService: NytArticleService = NytInjector.nytArticleService
         val nytProxy: ServiceProxy = NytProxyImpl(nytArticleService)
 
-        val infoBroker: InfoBroker = InfoBrokerImpl(nytProxy)
+        proxyList.add(nytProxy)
+
+        val infoBroker: InfoBroker = InfoBrokerImpl(proxyList)
 
         val repository: ArtistInfoRepository =
             ArtistInfoRepositoryImpl(localStorage, infoBroker)
