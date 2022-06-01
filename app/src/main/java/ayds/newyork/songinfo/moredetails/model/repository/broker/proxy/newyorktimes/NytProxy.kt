@@ -7,7 +7,6 @@ import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import ayds.ny3.newyorktimes.NytArticleService
 import ayds.ny3.newyorktimes.NytArtistInfo
 
-private const val NYT_LOGO = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU"
 
 internal class NytProxyImpl(
     private val nytArticleService: NytArticleService
@@ -32,7 +31,7 @@ internal class NytProxyImpl(
             nytArtistInfo.artistInfo,
             nytArtistInfo.artistURL,
             InfoSource.NEW_YORK_TIMES,
-            NYT_LOGO,
+            nytArtistInfo.nytLogo,
             false
         )
 }
