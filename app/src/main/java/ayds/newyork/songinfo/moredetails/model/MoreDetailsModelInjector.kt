@@ -12,6 +12,7 @@ import ayds.newyork.songinfo.moredetails.model.repository.local.card.sqldb.Curso
 import ayds.newyork.songinfo.moredetails.model.repository.local.card.sqldb.LocalStorageImpl
 import ayds.newyork.songinfo.moredetails.view.MoreDetailsView
 import ayds.ny3.newyorktimes.NytArticleService
+import ayds.ny3.newyorktimes.NytInjector
 
 object MoreDetailsModelInjector {
 
@@ -23,8 +24,7 @@ object MoreDetailsModelInjector {
         val localStorage: LocalStorage = LocalStorageImpl(
             moreDetailsView as Context, CursorToArtistArticleMapperImpl()
         )
-        val nytArticleService: NytArticleService =
-            ayds.ny3.newyorktimes.NytInjector.nytArticleService
+        val nytArticleService: NytArticleService = NytInjector.nytArticleService
 
         val nytProxy: NytProxy = NytProxyImpl(nytArticleService)
 
