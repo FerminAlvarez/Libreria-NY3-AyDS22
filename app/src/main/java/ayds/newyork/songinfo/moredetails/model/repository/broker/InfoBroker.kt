@@ -2,7 +2,7 @@ package ayds.newyork.songinfo.moredetails.model.repository.broker
 
 import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
-import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.newyorktimes.NytProxy
+import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.newyorktimes.ServiceProxy
 import java.util.*
 
 interface InfoBroker {
@@ -10,7 +10,7 @@ interface InfoBroker {
 }
 
 internal class InfoBrokerImpl(
-    private val nytProxy: NytProxy
+    private val nytProxy: ServiceProxy
 ) : InfoBroker {
     private lateinit var artist: String
     private var info = LinkedList<CardImpl>()
@@ -26,7 +26,7 @@ internal class InfoBrokerImpl(
         //todo( resto de los proxys)
     }
 
-    private fun callNytProxy(): Card = nytProxy.getInfoByArtistNameNyt(artist)
+    private fun callNytProxy(): Card = nytProxy.getInfo(artist)
 
     private fun addResultToList(card: Card) {
         when (card) {

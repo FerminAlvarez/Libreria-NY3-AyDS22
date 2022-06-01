@@ -5,7 +5,7 @@ import ayds.newyork.songinfo.moredetails.model.repository.ArtistInfoRepository
 import ayds.newyork.songinfo.moredetails.model.repository.ArtistInfoRepositoryImpl
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoBroker
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoBrokerImpl
-import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.newyorktimes.NytProxy
+import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.newyorktimes.ServiceProxy
 import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.newyorktimes.NytProxyImpl
 import ayds.newyork.songinfo.moredetails.model.repository.local.card.LocalStorage
 import ayds.newyork.songinfo.moredetails.model.repository.local.card.sqldb.CursorToArtistArticleMapperImpl
@@ -26,7 +26,7 @@ object MoreDetailsModelInjector {
         )
         val nytArticleService: NytArticleService = NytInjector.nytArticleService
 
-        val nytProxy: NytProxy = NytProxyImpl(nytArticleService)
+        val nytProxy: ServiceProxy = NytProxyImpl(nytArticleService)
 
         val infoBroker: InfoBroker = InfoBrokerImpl(nytProxy)
 
