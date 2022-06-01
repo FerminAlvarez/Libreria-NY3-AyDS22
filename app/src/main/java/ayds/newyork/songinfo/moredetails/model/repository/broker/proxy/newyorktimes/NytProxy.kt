@@ -9,15 +9,11 @@ import ayds.ny3.newyorktimes.NytArtistInfo
 
 private const val NYT_LOGO = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU"
 
-interface NytProxy {
-    fun getInfoByArtistNameNyt(artist: String): Card
-}
-
 internal class NytProxyImpl(
     private val nytArticleService: NytArticleService
-) : NytProxy {
+) : ServiceProxy {
 
-    override fun getInfoByArtistNameNyt(artist: String): Card {
+    override fun getInfo(artist: String): Card {
         var artistCard: CardImpl? = null
 
         try {
