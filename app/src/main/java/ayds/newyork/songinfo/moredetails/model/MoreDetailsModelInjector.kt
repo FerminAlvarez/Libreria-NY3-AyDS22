@@ -1,6 +1,9 @@
 package ayds.newyork.songinfo.moredetails.model
 
+import LastFMProxyImpl
 import android.content.Context
+import ayds.lisboa.lastfmdata.lastfm.LastFMInjector
+import ayds.lisboa.lastfmdata.lastfm.LastFMService
 import ayds.newyork.songinfo.moredetails.model.repository.ArtistInfoRepository
 import ayds.newyork.songinfo.moredetails.model.repository.ArtistInfoRepositoryImpl
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoBroker
@@ -30,7 +33,11 @@ object MoreDetailsModelInjector {
         val nytArticleService: NytArticleService = NytInjector.nytArticleService
         val nytProxy: ServiceProxy = NytProxyImpl(nytArticleService)
 
+        val lastFMArticleService: LastFMService = LastFMInjector.lastFMService
+        val lastFMProxy: ServiceProxy = LastFMProxyImpl(lastFMArticleService)
+
         proxyList.add(nytProxy)
+        proxyList.add(lastFMProxy)
 
         val infoBroker: InfoBroker = InfoBrokerImpl(proxyList)
 

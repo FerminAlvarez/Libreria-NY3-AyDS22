@@ -36,6 +36,7 @@ dependencies {
 
     implementation project(":observer")
     implementation project(":newyorkdata")
+    implementation project(":lastfmdata")
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
