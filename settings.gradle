@@ -5,3 +5,5 @@ include ':newyorkdata'
 project(':newyorkdata').projectDir = new File('libs/NewYorkTimesData')
 include ':lastfmdata'
 project(':lastfmdata').projectDir = new File('libs/LastFMData')
+include ':wikipediadata'
+project(':wikipediadata').projectDir = new File('libs/WikipediaData')
