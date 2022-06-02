@@ -1,6 +1,6 @@
 package ayds.newyork.songinfo.moredetails.model
 
-import LastFMProxyImpl
+import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.lastfm.LastFMProxyImpl
 import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.wikipedia.WikipediaProxyImpl
 import android.content.Context
 import ayds.lisboa.lastfmdata.lastfm.LastFMInjector

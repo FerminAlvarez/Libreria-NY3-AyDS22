@@ -1,3 +1,5 @@
+package ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.lastfm
+
 import ayds.lisboa.lastfmdata.lastfm.LastFMService
 import ayds.lisboa.lastfmdata.lastfm.entities.LastFMArtist
 import ayds.newyork.songinfo.moredetails.model.entities.Card
