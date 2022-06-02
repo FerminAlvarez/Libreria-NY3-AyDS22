@@ -16,10 +16,11 @@ import ayds.newyork.songinfo.utils.navigation.NavigationUtils
 import ayds.observer.Observable
 import ayds.observer.Subject
 import com.squareup.picasso.Picasso
+import kotlin.collections.ArrayList
 
 interface MoreDetailsView {
     val uiEventObservable: Observable<MoreDetailsUiEvent>
-    val uiState: MoreDetailsUiState
+    val uiState: ArrayList<MoreDetailsUiState>
 
     fun openExternalLink(url: String)
 }
@@ -38,11 +39,11 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private lateinit var logoImageView: ArrayList<ImageView>
     private lateinit var infoPane: ArrayList<TextView>
     private lateinit var sourcePane: ArrayList<TextView>
-    private lateinit var openArticleButton: Button
+    private lateinit var openArticleButton: ArrayList<Button>
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
     override val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
-    override var uiState: MoreDetailsUiState = MoreDetailsUiState()
+    override var uiState: ArrayList<MoreDetailsUiState> = ArrayList()
 
     override fun openExternalLink(url: String) {
         if (url.isNotEmpty())
@@ -69,11 +70,15 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun initStateProperty() {
         artistName = intent.getStringExtra(ARTIST_NAME_EXTRA) ?: ""
-        uiState = uiState.copy(artistName = artistName)
+        uiState.add(MoreDetailsUiState(artistName = artistName))
     }
 
     private fun initProperties() {
-        openArticleButton = findViewById(R.id.openUrlButton)
+        openArticleButton = arrayListOf(
+            findViewById(R.id.openUrlButton),
+            findViewById(R.id.openUrlButton2),
+            findViewById(R.id.openUrlButton3),
+        )
         logoImageView = arrayListOf(
             findViewById(R.id.nytImageView),
             findViewById(R.id.imageView2),
@@ -92,8 +97,10 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun initListeners() {
-        openArticleButton.setOnClickListener {
-            notifyOpenArticleUrlAction()
+        for ((buttonIndex, button) in openArticleButton.withIndex()) {
+            button.setOnClickListener {
+                notifyOpenArticleUrlAction(buttonIndex)
+            }
         }
     }
 
@@ -101,7 +108,8 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         onActionSubject.notify(MoreDetailsUiEvent.SearchInfo)
     }
 
-    private fun notifyOpenArticleUrlAction() {
+    private fun notifyOpenArticleUrlAction(buttonIndex: Int) {
+        MoreDetailsUiEvent.OpenArticleUrl.uiStateIndex = buttonIndex
         onActionSubject.notify(MoreDetailsUiEvent.OpenArticleUrl)
     }
 
@@ -111,12 +119,18 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun updateArtistInfo(artistInfoResult: List<Card>) {
-        for((cardNumber, artistInfo) in artistInfoResult.withIndex()) {
+        clearUiState()
+        for ((cardNumber, artistInfo) in artistInfoResult.withIndex()) {
             updateUiState(artistInfo)
             updateSourceLogo(cardNumber)
             updateSourceName(cardNumber)
             updateArtistInfoPanel(cardNumber)
+            updateArticleButton(cardNumber)
         }
+    }
+
+    private fun clearUiState() {
+        uiState.clear()
     }
 
     private fun updateUiState(artistInfo: Card) {
@@ -127,33 +141,42 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun updateArtistInfoUiState(artistInfo: Card) {
-        uiState = uiState.copy(
-            articleUrl = artistInfo.infoURL,
-            artistInfo = artistInfoHelper.getArtistInfoText(artistInfo, uiState.artistName),
-            source = sourceMapper.getSource(artistInfo.source),
-            sourceLogoUrl = artistInfo.sourceLogoUrl
+        uiState.add(
+            MoreDetailsUiState(
+                articleUrl = artistInfo.infoURL,
+                artistInfo = artistInfoHelper.getArtistInfoText(
+                    artistInfo,
+                    artistName
+                ),
+                source = sourceMapper.getSource(artistInfo.source),
+                sourceLogoUrl = artistInfo.sourceLogoUrl
+            )
         )
+
     }
 
     private fun updateNoResultsUiState() {
-        uiState = uiState.copy(
-            articleUrl = "",
-            artistInfo = artistInfoHelper.getArtistInfoText(),
-            source = "Sourceless?",
-            sourceLogoUrl = MoreDetailsUiState.DEFAULT_LOGO
+        uiState.add(
+            MoreDetailsUiState(
+                articleUrl = "",
+                artistInfo = artistInfoHelper.getArtistInfoText(),
+                source = "Sourceless?",
+                sourceLogoUrl = MoreDetailsUiState.DEFAULT_LOGO
+            )
         )
     }
 
     private fun updateSourceLogo(selectedCard: Int) {
         runOnUiThread {
-            Picasso.get().load(uiState.sourceLogoUrl).into(logoImageView[selectedCard])
+            Picasso.get().load(uiState[selectedCard].sourceLogoUrl)
+                .into(logoImageView[selectedCard])
             logoImageView[selectedCard].visibility = View.VISIBLE
         }
     }
 
     private fun updateSourceName(selectedCard: Int) {
         runOnUiThread {
-            val source = uiState.source
+            val source = uiState[selectedCard].source
             val sourceText = "Source: $source"
             this.sourcePane[selectedCard].text = sourceText
             this.sourcePane[selectedCard].visibility = View.VISIBLE
@@ -163,8 +186,17 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private fun updateArtistInfoPanel(selectedCard: Int) {
         runOnUiThread {
             infoPane[selectedCard].text =
-                HtmlCompat.fromHtml(uiState.artistInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                HtmlCompat.fromHtml(
+                    uiState[selectedCard].artistInfo,
+                    HtmlCompat.FROM_HTML_MODE_LEGACY
+                )
             infoPane[selectedCard].visibility = View.VISIBLE
+        }
+    }
+
+    private fun updateArticleButton(selectedCard: Int) {
+        runOnUiThread {
+            this.openArticleButton[selectedCard].visibility = View.VISIBLE
         }
     }
 }

@@ -30,13 +30,15 @@ internal class MoreDetailsControllerImpl(
 
     private fun searchInfo() {
         Thread {
-            moreDetailsModel.getInfoByArtistName(moreDetailsView.uiState.artistName)
+            val selectedState = MoreDetailsUiEvent.SearchInfo.uiStateIndex
+            moreDetailsModel.getInfoByArtistName(moreDetailsView.uiState[selectedState].artistName)
         }.start()
     }
 
     private fun openArticle() {
         Thread {
-            moreDetailsView.openExternalLink(moreDetailsView.uiState.articleUrl)
+            val selectedState = MoreDetailsUiEvent.OpenArticleUrl.uiStateIndex
+            moreDetailsView.openExternalLink(moreDetailsView.uiState[selectedState].articleUrl)
         }.start()
     }
 }
