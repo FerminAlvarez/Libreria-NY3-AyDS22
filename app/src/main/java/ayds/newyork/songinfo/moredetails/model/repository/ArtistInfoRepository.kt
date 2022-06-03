@@ -4,7 +4,6 @@ import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoBroker
 import ayds.newyork.songinfo.moredetails.model.repository.local.card.LocalStorage
-import java.util.*
 
 interface ArtistInfoRepository {
     fun getInfoByArtistName(artist: String): List<Card>
@@ -16,32 +15,28 @@ internal class ArtistInfoRepositoryImpl(
 ) : ArtistInfoRepository {
 
 
-    override fun getInfoByArtistName(artist: String): LinkedList<Card> {
-        var artistCard = localStorage.getInfoByArtistName(artist)
-        val artistCardResult = LinkedList<Card>()
+    override fun getInfoByArtistName(artist: String): List<Card> {
+        var infoList = localStorage.getInfoByArtistName(artist)
 
         when {
-            artistCard != null -> markArticleAsLocal(artistCard)
+            infoList.isNotEmpty() -> markArticleAsLocal(infoList)
             else -> {
-                val infoList = infoBroker.getInfoByArtistName(artist)
+                infoList = infoBroker.getInfoByArtistName(artist)
 
-                if (infoList.isEmpty())
-                    artistCard = null
-                else
-                    artistCard = infoList.first()
-
-                artistCard?.let {
-                    localStorage.saveArtist(it, artist)
+                if (infoList.isNotEmpty()) {
+                    saveArtists(infoList, artist)
                 }
+
             }
         }
-        artistCard?.let {
-            artistCardResult.add(artistCard)
-        }
-        return artistCardResult
+        return infoList
     }
 
-    private fun markArticleAsLocal(article: CardImpl) {
-        article.isLocallyStored = true
+    private fun markArticleAsLocal(articles: List<CardImpl>) {
+        articles.map { it.isLocallyStored = true }
+    }
+
+    private fun saveArtists(articles: List<CardImpl>, artist: String) {
+        articles.map { localStorage.saveArtist(it, artist) }
     }
 }

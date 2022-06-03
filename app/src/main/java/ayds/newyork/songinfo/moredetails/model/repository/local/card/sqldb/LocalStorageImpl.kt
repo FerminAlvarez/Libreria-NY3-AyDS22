@@ -58,7 +58,7 @@ class LocalStorageImpl(
         database.insert(ARTISTS_TABLE, null, artist)
     }
 
-    override fun getInfoByArtistName(artist: String): CardImpl? {
+    override fun getInfoByArtistName(artist: String): List<CardImpl> {
         val cursor = getCursor(artist)
         return cursorToArtistArticleMapper.map(cursor)
     }

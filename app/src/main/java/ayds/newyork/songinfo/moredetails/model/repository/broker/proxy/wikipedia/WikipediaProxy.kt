@@ -31,8 +31,8 @@ internal class WikipediaProxyImpl(
         CardImpl(
             wikipediaArtistInfo.description,
             wikipediaArtistInfo.infoURL,
-            InfoSource.LAST_FM,
-            "",
+            InfoSource.WIKIPEDIA,
+            wikipediaArtistInfo.sourceLogoURL,
             false
         )
 }
