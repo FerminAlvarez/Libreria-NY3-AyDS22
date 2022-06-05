@@ -31,19 +31,30 @@ class MoreDetailsControllerImplTest {
 
     @Test
     fun `on search event should search artist info`() {
-        every { moreDetailsView.uiState } returns MoreDetailsUiState(artistName = "name")
+        val uiState: ArrayList<MoreDetailsUiState> = arrayListOf(
+            MoreDetailsUiState(artistName = "name"),
+        )
 
-        onActionSubject.notify(MoreDetailsUiEvent.SearchNytInfo)
+        every { moreDetailsView.uiState } returns uiState
+
+        onActionSubject.notify(MoreDetailsUiEvent.SearchInfo)
 
         verify { moreDetailsModel.getInfoByArtistName("name") }
     }
 
     @Test
-    fun `on open article event should open external link`() {
-        every { moreDetailsView.uiState } returns MoreDetailsUiState(articleUrl = "url")
+    fun `on open article event should open indicated external link`() {
+        val uiState: ArrayList<MoreDetailsUiState> = arrayListOf(
+            MoreDetailsUiState(articleUrl = "url0"),
+            MoreDetailsUiState(articleUrl = "url1"),
+            MoreDetailsUiState(articleUrl = "url2"),
+        )
+
+        every { moreDetailsView.uiState } returns uiState
+        MoreDetailsUiEvent.OpenArticleUrl.uiStateIndex = 1
 
         onActionSubject.notify(MoreDetailsUiEvent.OpenArticleUrl)
 
-        verify { moreDetailsView.openExternalLink("url") }
+        verify { moreDetailsView.openExternalLink("url1") }
     }
 }
