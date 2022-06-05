@@ -1,64 +1,62 @@
 package ayds.newyork.songinfo.moredetails.model.repository
 
-import ayds.newyork.songinfo.moredetails.model.entities.EmptyArtistInfo
-import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
-import ayds.ny3.newyorktimes.NytArticleService
+import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
+import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoBroker
+import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import ayds.newyork.songinfo.moredetails.model.repository.local.card.LocalStorage
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Assert.*
 import org.junit.Test
+import java.util.*
 
 class ArtistInfoRepositoryTest {
     private val localStorage: LocalStorage = mockk(relaxUnitFun = true)
-    private val nytArticleService: NytArticleService = mockk(relaxUnitFun = true)
+    private val infoBroker: InfoBroker = mockk(relaxUnitFun = true)
 
     private val artistInfoRepository: ArtistInfoRepository by lazy {
-        ArtistInfoRepositoryImpl(localStorage, nytArticleService)
+        ArtistInfoRepositoryImpl(localStorage, infoBroker)
     }
 
     @Test
     fun `given non existing artist info by name should return empty artist info`() {
-        every { localStorage.getInfoByArtistName("name") } returns null
-        every { nytArticleService.getArtistInfo("name") } returns null
+        every { localStorage.getInfoByArtistName("name") } returns emptyList()
+        every { infoBroker.getInfoByArtistName("name") } returns emptyList()
 
         val result = artistInfoRepository.getInfoByArtistName("name")
 
-        assertEquals(EmptyArtistInfo, result)
+        assertTrue(result.isEmpty())
     }
 
     @Test
     fun `given existing artist info by name should return artist info and mark it as local`() {
-        val artistInfo = NytArtistInfo("name", "artist info", "artist URL")
-        every { localStorage.getInfoByArtistName("name") } returns artistInfo
+        val artistsList = LinkedList<CardImpl>()
+        val artistInfo = CardImpl("artist info", "", InfoSource.EMPTY, "")
+        artistsList.push(artistInfo)
+
+        every { localStorage.getInfoByArtistName("name") } returns artistsList
 
         val result = artistInfoRepository.getInfoByArtistName("name")
 
-        assertEquals(artistInfo, result)
+        assertEquals(artistsList, result)
         assertTrue(artistInfo.isLocallyStored)
     }
 
     @Test
     fun `given non existing artist info by name should get the info and store it`() {
-        val artistInfo = NytArtistInfo("name", "artist info", "artist URL")
-        every { localStorage.getInfoByArtistName("name") } returns null
-        every { nytArticleService.getArtistInfo("name") } returns artistInfo
+        val artistsList = LinkedList<CardImpl>()
+        val artistInfo = CardImpl("name", "artist info URL", InfoSource.EMPTY, "")
+        artistsList.push(artistInfo)
+
+        every { localStorage.getInfoByArtistName("name") } returns emptyList()
+        every { infoBroker.getInfoByArtistName("name") } returns artistsList
 
         val result = artistInfoRepository.getInfoByArtistName("name")
 
-        assertEquals(artistInfo, result)
+        assertEquals(artistsList, result)
         assertFalse(artistInfo.isLocallyStored)
-        verify { localStorage.saveArtist(artistInfo) }
+        verify { localStorage.saveArtist(artistInfo, "name") }
     }
 
-    @Test
-    fun `given service exception should return empty artist info`() {
-        every { localStorage.getInfoByArtistName("name") } returns null
-        every { nytArticleService.getArtistInfo("name") } throws mockk<Exception>()
-
-        val result = artistInfoRepository.getInfoByArtistName("name")
-
-        assertEquals(EmptyArtistInfo, result)
-    }
 }
