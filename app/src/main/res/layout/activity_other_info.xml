@@ -22,7 +22,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/nytImageView"
+                android:id="@+id/imageView1"
                 android:layout_width="match_parent"
                 android:layout_height="203dp"
                 android:layout_margin="16dp"
@@ -30,7 +30,7 @@
                 android:visibility="gone" />
 
             <TextView
-                android:id="@+id/nytInfoSourcePane"
+                android:id="@+id/infoSourcePane1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
@@ -38,13 +38,13 @@
                 android:visibility="gone" />
 
             <ScrollView
-                android:id="@+id/nytInfoScrollView"
+                android:id="@+id/infoScrollView1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="16dp">
 
                 <TextView
-                    android:id="@+id/nytInfoPane"
+                    android:id="@+id/infoPane1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autoLink="web"

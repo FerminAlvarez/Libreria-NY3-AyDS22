@@ -80,17 +80,17 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
             findViewById(R.id.openUrlButton3),
         )
         logoImageView = arrayListOf(
-            findViewById(R.id.nytImageView),
+            findViewById(R.id.imageView1),
             findViewById(R.id.imageView2),
             findViewById(R.id.imageView3)
         )
         infoPane = arrayListOf(
-            findViewById(R.id.nytInfoPane),
+            findViewById(R.id.infoPane1),
             findViewById(R.id.infoPane2),
             findViewById(R.id.infoPane3)
         )
         sourcePane = arrayListOf(
-            findViewById(R.id.nytInfoSourcePane),
+            findViewById(R.id.infoSourcePane1),
             findViewById(R.id.infoSourcePane2),
             findViewById(R.id.infoSourcePane3)
         )
