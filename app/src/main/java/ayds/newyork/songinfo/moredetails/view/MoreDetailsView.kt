@@ -104,10 +104,6 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         }
     }
 
-    private fun notifySearchInfoAction() {
-        onActionSubject.notify(MoreDetailsUiEvent.SearchInfo)
-    }
-
     private fun notifyOpenArticleUrlAction(buttonIndex: Int) {
         MoreDetailsUiEvent.OpenArticleUrl.uiStateIndex = buttonIndex
         onActionSubject.notify(MoreDetailsUiEvent.OpenArticleUrl)
@@ -198,5 +194,9 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         runOnUiThread {
             this.openArticleButton[selectedCard].visibility = View.VISIBLE
         }
+    }
+
+    private fun notifySearchInfoAction() {
+        onActionSubject.notify(MoreDetailsUiEvent.SearchInfo)
     }
 }
