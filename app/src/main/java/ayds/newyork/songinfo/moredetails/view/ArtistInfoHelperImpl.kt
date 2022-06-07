@@ -10,18 +10,23 @@ private const val FONT = "<font face=\"arial\">"
 private const val FOOTER = "</font></div></html>"
 
 interface ArtistInfoHelper {
-    fun getArtistInfoText(artistInfo: Card = EmptyCard, artistName : String = ""): String
+    fun getArtistInfoText(artistInfo: Card, artistName: String): String
+
+    fun getEmptyInfoText(): String
 }
 
 internal class ArtistInfoHelperImpl : ArtistInfoHelper {
 
-    override fun getArtistInfoText(artistInfo: Card, artistName : String) = when (artistInfo) {
-        is CardImpl -> formatArtistInfo(artistInfo, artistName)
-        else -> ARTIST_INFO_NOT_FOUND
-    }
+    override fun getArtistInfoText(artistInfo: Card, artistName: String) =
+        formatArtistInfo(artistInfo, artistName)
 
     private fun formatArtistInfo(artistInfo: Card, artistName: String): String {
-        return ("${if (artistInfo.isLocallyStored) INFO_IN_DATABASE_SYMBOL else "" }${articleToHTML(artistInfo,artistName)}")
+        return ("${if (artistInfo.isLocallyStored) INFO_IN_DATABASE_SYMBOL else ""}${
+            articleToHTML(
+                artistInfo,
+                artistName
+            )
+        }")
     }
 
     private fun articleToHTML(artistInfo: Card, artistName: String): String {
@@ -37,4 +42,6 @@ internal class ArtistInfoHelperImpl : ArtistInfoHelper {
         builder.append(FOOTER)
         return builder.toString()
     }
+
+    override fun getEmptyInfoText() = ARTIST_INFO_NOT_FOUND
 }
