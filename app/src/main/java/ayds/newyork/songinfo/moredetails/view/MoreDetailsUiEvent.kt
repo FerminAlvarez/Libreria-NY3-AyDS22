@@ -1,10 +1,9 @@
 package ayds.newyork.songinfo.moredetails.view
 
 sealed class MoreDetailsUiEvent {
-    object SearchInfo : MoreDetailsUiEvent() {
-        var uiStateIndex: Int = 0
-    }
+    object SearchInfo : MoreDetailsUiEvent()
+
     object OpenArticleUrl : MoreDetailsUiEvent() {
-        var uiStateIndex: Int = 0
+        var uiCardIndex: Int = 0
     }
 }

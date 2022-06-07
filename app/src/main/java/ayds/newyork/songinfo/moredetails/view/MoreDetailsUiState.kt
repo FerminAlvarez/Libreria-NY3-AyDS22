@@ -1,10 +1,10 @@
 package ayds.newyork.songinfo.moredetails.view
 
+import ayds.newyork.songinfo.moredetails.model.entities.Card
+
 data class MoreDetailsUiState(
     val artistName: String = "",
-    val articleUrl: String = "",
-    val artistInfo: String = "",
-    val source: String = "",
+    val cards: List<Card> = emptyList(),
     val sourceLogoUrl: String = DEFAULT_LOGO,
 ) {
     companion object {

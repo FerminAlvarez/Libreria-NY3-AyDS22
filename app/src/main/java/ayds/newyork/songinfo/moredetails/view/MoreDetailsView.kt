@@ -12,7 +12,6 @@ import ayds.newyork.songinfo.moredetails.model.MoreDetailsModel
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModelInjector
 import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
-import ayds.newyork.songinfo.moredetails.model.entities.EmptyCard
 import ayds.newyork.songinfo.utils.UtilsInjector
 import ayds.newyork.songinfo.utils.navigation.NavigationUtils
 import ayds.observer.Observable
@@ -21,7 +20,7 @@ import com.squareup.picasso.Picasso
 
 interface MoreDetailsView {
     val uiEventObservable: Observable<MoreDetailsUiEvent>
-    val uiState: ArrayList<MoreDetailsUiState>
+    val uiState: MoreDetailsUiState
 
     fun openExternalLink(url: String)
 }
@@ -43,7 +42,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
     override val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
-    override var uiState: ArrayList<MoreDetailsUiState> = ArrayList()
+    override var uiState: MoreDetailsUiState = MoreDetailsUiState()
 
     override fun openExternalLink(url: String) {
         if (url.isNotEmpty())
@@ -69,7 +68,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun initStateProperty() {
         artistName = intent.getStringExtra(ARTIST_NAME_EXTRA) ?: ""
-        uiState.add(MoreDetailsUiState(artistName = artistName))
+        uiState = uiState.copy(artistName = artistName)
     }
 
     private fun initProperties() {
@@ -104,7 +103,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun notifyOpenArticleUrlAction(buttonIndex: Int) {
-        MoreDetailsUiEvent.OpenArticleUrl.uiStateIndex = buttonIndex
+        MoreDetailsUiEvent.OpenArticleUrl.uiCardIndex = buttonIndex
         onActionSubject.notify(MoreDetailsUiEvent.OpenArticleUrl)
     }
 
@@ -114,9 +113,8 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun updateArtistInfo(artistInfoResult: List<Card>) {
-        clearUiState()
         for ((cardNumber, artistInfo) in artistInfoResult.withIndex()) {
-            updateUiState(artistInfo)
+            updateArtistInfoUiState(artistInfo)
             updateSourceLogo(cardNumber)
             updateSourceName(cardNumber)
             updateArtistInfoPanel(cardNumber)
@@ -124,46 +122,23 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         }
     }
 
-    private fun clearUiState() {
-        uiState.clear()
-    }
-
-    private fun updateUiState(artistInfo: Card) {
-        when (artistInfo) {
-            is CardImpl -> updateArtistInfoUiState(artistInfo)
-            EmptyCard -> updateNoResultsUiState()
-        }
-    }
-
     private fun updateArtistInfoUiState(artistInfo: Card) {
-        uiState.add(
-            MoreDetailsUiState(
-                articleUrl = artistInfo.infoURL,
-                artistInfo = artistInfoHelper.getArtistInfoText(
+        uiState = uiState.copy(
+            cards = uiState.cards.plus(CardImpl(
+                infoURL = artistInfo.infoURL,
+                description = artistInfoHelper.getArtistInfoText(
                     artistInfo,
                     artistName
                 ),
-                source = artistInfo.source.value,
+                source = artistInfo.source,
                 sourceLogoUrl = artistInfo.sourceLogoUrl
-            )
-        )
-
-    }
-
-    private fun updateNoResultsUiState() {
-        uiState.add(
-            MoreDetailsUiState(
-                articleUrl = "",
-                artistInfo = artistInfoHelper.getArtistInfoText(),
-                source = "Sourceless?",
-                sourceLogoUrl = MoreDetailsUiState.DEFAULT_LOGO
-            )
+            ))
         )
     }
 
     private fun updateSourceLogo(selectedCard: Int) {
         runOnUiThread {
-            Picasso.get().load(uiState[selectedCard].sourceLogoUrl)
+            Picasso.get().load(uiState.cards[selectedCard].sourceLogoUrl)
                 .into(logoImageView[selectedCard])
             logoImageView[selectedCard].visibility = View.VISIBLE
         }
@@ -171,7 +146,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun updateSourceName(selectedCard: Int) {
         runOnUiThread {
-            val source = uiState[selectedCard].source
+            val source = uiState.cards[selectedCard].source.value
             val sourceText = "Source: $source"
             this.sourcePane[selectedCard].text = sourceText
             this.sourcePane[selectedCard].visibility = View.VISIBLE
@@ -182,7 +157,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
         runOnUiThread {
             infoPane[selectedCard].text =
                 HtmlCompat.fromHtml(
-                    uiState[selectedCard].artistInfo,
+                    uiState.cards[selectedCard].description,
                     HtmlCompat.FROM_HTML_MODE_LEGACY
                 )
             infoPane[selectedCard].visibility = View.VISIBLE
