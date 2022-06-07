@@ -20,9 +20,7 @@ class ArtistInfoHelperImplTest {
 
     @Test
     fun `given a EmptyArtistInfo it should return artist info not found`() {
-        val artistInfo = EmptyCard
-
-        val result = artistInfoHelperImpl.getArtistInfoText(artistInfo)
+        val result = artistInfoHelperImpl.getEmptyInfoText()
 
         val expected = "Artist Info not found"
 
@@ -33,7 +31,7 @@ class ArtistInfoHelperImplTest {
     fun `given a ArtistInfo not locally stored it should return the info`() {
         cardInfo.isLocallyStored = false
 
-        val result = artistInfoHelperImpl.getArtistInfoText(cardInfo)
+        val result = artistInfoHelperImpl.getArtistInfoText(cardInfo,"artist")
 
         val expected = "<html><div width=400><font face=\"arial\">" +
                 "One of the most lasting and influential artistic movements of the 20th century was " +
@@ -48,7 +46,7 @@ class ArtistInfoHelperImplTest {
     fun `given a ArtistInfo locally stored it should return the info`() {
         cardInfo.isLocallyStored = true
 
-        val result = artistInfoHelperImpl.getArtistInfoText(cardInfo)
+        val result = artistInfoHelperImpl.getArtistInfoText(cardInfo, "artist")
 
         val expected = "[*]\n" +
                 "<html><div width=400><font face=\"arial\">" +
