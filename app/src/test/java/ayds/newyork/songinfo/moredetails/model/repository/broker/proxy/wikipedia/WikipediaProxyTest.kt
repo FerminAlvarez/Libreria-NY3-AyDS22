@@ -3,14 +3,14 @@ package ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.wikipedi
 import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import ayds.winchester1.wikipedia.WikipediaArtistInfo
-import ayds.winchester1.wikipedia.WikipediaCardService
+import ayds.winchester1.wikipedia.WikipediaService
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class WikipediaProxyTest {
-    private val wikipediaService: WikipediaCardService = mockk()
+    private val wikipediaService: WikipediaService = mockk()
 
     private val wikipediaProxy = WikipediaProxyImpl(wikipediaService)
 
@@ -29,7 +29,7 @@ class WikipediaProxyTest {
             sourceLogoUrl = "logo",
         )
 
-        every { wikipediaService.getCard("name") } returns wikipediaArtistInfo
+        every { wikipediaService.getArtistInfo("name") } returns wikipediaArtistInfo
 
         val result = wikipediaProxy.getInfo("name")
 

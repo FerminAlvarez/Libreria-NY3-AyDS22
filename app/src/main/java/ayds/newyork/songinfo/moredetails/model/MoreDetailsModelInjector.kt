@@ -32,7 +32,7 @@ object MoreDetailsModelInjector {
         val proxyList: ArrayList<ServiceProxy> = arrayListOf(
             NytProxyImpl(NytInjector.nytArticleService),
             LastFMProxyImpl(LastFMInjector.lastFMService),
-            WikipediaProxyImpl(WikipediaInjector.wikipediaCardService),
+            WikipediaProxyImpl(WikipediaInjector.wikipediaService),
         )
 
         val infoBroker: InfoBroker = InfoBrokerImpl(proxyList)
