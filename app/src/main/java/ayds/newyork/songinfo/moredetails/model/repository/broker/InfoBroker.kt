@@ -13,10 +13,10 @@ internal class InfoBrokerImpl(
 ) : InfoBroker {
 
     override fun getInfoByArtistName(artist: String): List<CardImpl> {
-        return getCardsFormProxies(artist)
+        return getCardsFromProxies(artist)
     }
 
-    private fun getCardsFormProxies(artist: String): List<CardImpl> {
+    private fun getCardsFromProxies(artist: String): List<CardImpl> {
         return proxyList.map {
             getCardFromProxy(artist, it)
         }.filterIsInstance<CardImpl>()
