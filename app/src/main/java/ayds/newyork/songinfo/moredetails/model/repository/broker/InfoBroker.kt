@@ -12,15 +12,12 @@ internal class InfoBrokerImpl(
     private val proxyList: List<ServiceProxy>
 ) : InfoBroker {
 
-    override fun getInfoByArtistName(artist: String): List<CardImpl> {
-        return getCardsFromProxies(artist)
-    }
+    override fun getInfoByArtistName(artist: String): List<CardImpl> = getCardsFromProxies(artist)
 
-    private fun getCardsFromProxies(artist: String): List<CardImpl> {
-        return proxyList.map {
+    private fun getCardsFromProxies(artist: String): List<CardImpl> =
+        proxyList.map {
             getCardFromProxy(artist, it)
         }.filterIsInstance<CardImpl>()
-    }
 
     private fun getCardFromProxy(artist: String, serviceProxy: ServiceProxy): Card =
         serviceProxy.getInfo(artist)
