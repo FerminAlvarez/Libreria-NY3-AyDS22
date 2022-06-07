@@ -3,7 +3,6 @@ package ayds.newyork.songinfo.moredetails.model.repository.broker
 import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
 import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.ServiceProxy
-import java.util.*
 
 interface InfoBroker {
     fun getInfoByArtistName(artist: String): List<CardImpl>
@@ -12,26 +11,18 @@ interface InfoBroker {
 internal class InfoBrokerImpl(
     private val proxyList: List<ServiceProxy>
 ) : InfoBroker {
-    private lateinit var artist: String
-    private var info = LinkedList<CardImpl>()
 
     override fun getInfoByArtistName(artist: String): List<CardImpl> {
-        this.artist = artist
-        callProxies()
-        return info
+        return getCardsFormProxies(artist)
     }
 
-    private fun callProxies() {
-        proxyList.forEach {
-            addCardToList(getCardFromProxy(it))
-        }
+    private fun getCardsFormProxies(artist: String): List<CardImpl> {
+        return proxyList.map {
+            getCardFromProxy(artist, it)
+        }.filterIsInstance<CardImpl>()
     }
 
-    private fun getCardFromProxy(serviceProxy: ServiceProxy): Card = serviceProxy.getInfo(artist)
+    private fun getCardFromProxy(artist: String, serviceProxy: ServiceProxy): Card =
+        serviceProxy.getInfo(artist)
 
-    private fun addCardToList(card: Card) {
-        when (card) {
-            is CardImpl -> this.info.add(card)
-        }
-    }
 }
