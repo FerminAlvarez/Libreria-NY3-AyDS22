@@ -10,13 +10,14 @@ import androidx.core.text.HtmlCompat
 import ayds.newyork.songinfo.R
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModel
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModelInjector
-import ayds.newyork.songinfo.moredetails.model.entities.*
+import ayds.newyork.songinfo.moredetails.model.entities.Card
+import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
+import ayds.newyork.songinfo.moredetails.model.entities.EmptyCard
 import ayds.newyork.songinfo.utils.UtilsInjector
 import ayds.newyork.songinfo.utils.navigation.NavigationUtils
 import ayds.observer.Observable
 import ayds.observer.Subject
 import com.squareup.picasso.Picasso
-import kotlin.collections.ArrayList
 
 interface MoreDetailsView {
     val uiEventObservable: Observable<MoreDetailsUiEvent>
@@ -34,7 +35,6 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private val onActionSubject = Subject<MoreDetailsUiEvent>()
     private val artistInfoHelper: ArtistInfoHelper = MoreDetailsViewInjector.artistInfoHelper
     private lateinit var moreDetailsModel: MoreDetailsModel
-    private lateinit var sourceMapper: SourceMapper
     private lateinit var artistName: String
     private lateinit var logoImageView: ArrayList<ImageView>
     private lateinit var infoPane: ArrayList<TextView>
@@ -65,7 +65,6 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
     private fun initModule() {
         MoreDetailsViewInjector.init(this)
         moreDetailsModel = MoreDetailsModelInjector.getMoreDetailsModel()
-        sourceMapper = MoreDetailsViewInjector.getSourceMapper()
     }
 
     private fun initStateProperty() {
@@ -144,7 +143,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
                     artistInfo,
                     artistName
                 ),
-                source = sourceMapper.getSource(artistInfo.source),
+                source = artistInfo.source.value,
                 sourceLogoUrl = artistInfo.sourceLogoUrl
             )
         )
