@@ -12,7 +12,7 @@ import org.junit.Test
 class LastFMProxyTest {
     private val lastFMService: LastFMService = mockk()
 
-    private val lastFMProxy = LastFMProxyImpl(lastFMService)
+    private val lastFMProxy = LastFMProxy(lastFMService)
 
     @Test
     fun `given an artistName it should call the service`() {

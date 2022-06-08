@@ -12,7 +12,7 @@ import org.junit.Test
 class WikipediaProxyTest {
     private val wikipediaService: WikipediaService = mockk()
 
-    private val wikipediaProxy = WikipediaProxyImpl(wikipediaService)
+    private val wikipediaProxy = WikipediaProxy(wikipediaService)
 
     @Test
     fun `given an artistName it should call the service`() {
