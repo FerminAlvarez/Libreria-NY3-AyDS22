@@ -6,18 +6,18 @@ import ayds.newyork.songinfo.moredetails.model.entities.EmptyCard
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.ServiceProxy
 import ayds.winchester1.wikipedia.WikipediaArtistInfo
-import ayds.winchester1.wikipedia.WikipediaCardService
+import ayds.winchester1.wikipedia.WikipediaService
 
 
 internal class WikipediaProxyImpl(
-    private val wikipediaService: WikipediaCardService
+    private val wikipediaService: WikipediaService
 ) : ServiceProxy {
 
     override fun getInfo(artist: String): Card {
         var artistCard: CardImpl? = null
 
         try {
-            val serviceArtistInfo = wikipediaService.getCard(artist)
+            val serviceArtistInfo = wikipediaService.getArtistInfo(artist)
             serviceArtistInfo?.let {
                 artistCard = createArtistInfo(it)
             }
