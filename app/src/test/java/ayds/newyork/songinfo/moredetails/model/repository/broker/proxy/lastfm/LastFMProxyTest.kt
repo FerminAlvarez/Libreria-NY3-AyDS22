@@ -6,6 +6,7 @@ import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -35,5 +36,6 @@ class LastFMProxyTest {
         val result = lastFMProxy.getInfo("name")
 
         assertEquals(expected, result)
+        verify { lastFMService.getArtist("name") }
     }
 }
