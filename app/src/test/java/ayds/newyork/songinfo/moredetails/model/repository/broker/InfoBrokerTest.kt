@@ -1,6 +1,6 @@
 package ayds.newyork.songinfo.moredetails.model.repository.broker
 
-import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
+import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.ServiceProxy
 import io.mockk.every
 import io.mockk.mockk
@@ -19,8 +19,8 @@ class InfoBrokerTest {
 
     @Test
     fun `given an artistName it should call all proxies`() {
-        val card: CardImpl = mockk()
-        val infoList = arrayListOf<CardImpl>(
+        val card: Card = mockk()
+        val infoList = arrayListOf<Card>(
             card,
             card,
             card

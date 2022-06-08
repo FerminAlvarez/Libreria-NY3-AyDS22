@@ -1,7 +1,6 @@
 package ayds.newyork.songinfo.moredetails.model.repository
 
 import ayds.newyork.songinfo.moredetails.model.entities.Card
-import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoBroker
 import ayds.newyork.songinfo.moredetails.model.repository.local.card.LocalStorage
 
@@ -32,11 +31,11 @@ internal class ArtistInfoRepositoryImpl(
         return infoList
     }
 
-    private fun markArticleAsLocal(articles: List<CardImpl>) {
+    private fun markArticleAsLocal(articles: List<Card>) {
         articles.map { it.isLocallyStored = true }
     }
 
-    private fun saveArtists(articles: List<CardImpl>, artist: String) {
+    private fun saveArtists(articles: List<Card>, artist: String) {
         articles.map { localStorage.saveArtist(it, artist) }
     }
 }

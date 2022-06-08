@@ -1,7 +1,6 @@
 package ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.newyorktimes
 
 import ayds.newyork.songinfo.moredetails.model.entities.Card
-import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.ServiceProxy
 import ayds.ny3.newyorktimes.NytArticleService
@@ -22,7 +21,7 @@ internal class NytProxy(
     }
 
     private fun createArtistInfo(nytArtistInfo: NytArtistInfo) =
-        CardImpl(
+        Card(
             nytArtistInfo.artistInfo,
             nytArtistInfo.artistURL,
             InfoSource.NEW_YORK_TIMES,

@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
+import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.repository.local.card.LocalStorage
 
 const val DATABASE_NAME = "dictionary.db"
@@ -38,12 +38,12 @@ class LocalStorageImpl(
 
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
-    override fun saveArtist(artist: CardImpl, artistName: String) {
+    override fun saveArtist(artist: Card, artistName: String) {
         val newArtist = setArtistValues(artist, artistName)
         insertNewArtist(newArtist)
     }
 
-    private fun setArtistValues(artist: CardImpl, artistName: String): ContentValues {
+    private fun setArtistValues(artist: Card, artistName: String): ContentValues {
         val values = ContentValues()
         values.put(ARTIST_COLUMN, artistName)
         values.put(INFO_COLUMN, artist.description)
@@ -58,7 +58,7 @@ class LocalStorageImpl(
         database.insert(ARTISTS_TABLE, null, artist)
     }
 
-    override fun getInfoByArtistName(artist: String): List<CardImpl> {
+    override fun getInfoByArtistName(artist: String): List<Card> {
         val cursor = getCursor(artist)
         return cursorToArtistArticleMapper.map(cursor)
     }

@@ -1,6 +1,6 @@
 package ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.wikipedia
 
-import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
+import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import ayds.winchester1.wikipedia.WikipediaArtistInfo
 import ayds.winchester1.wikipedia.WikipediaService
@@ -22,7 +22,7 @@ class WikipediaProxyTest {
             sourceLogoURL = "logo",
         )
 
-        val expected = CardImpl(
+        val expected = Card(
             description = "info",
             infoURL = "article",
             source = InfoSource.WIKIPEDIA,

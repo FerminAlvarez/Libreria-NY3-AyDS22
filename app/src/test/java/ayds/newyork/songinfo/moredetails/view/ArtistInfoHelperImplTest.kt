@@ -1,15 +1,14 @@
 package ayds.newyork.songinfo.moredetails.view
 
 
-import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
-import ayds.newyork.songinfo.moredetails.model.entities.EmptyCard
+import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import org.junit.Assert
 import org.junit.Test
 
 class ArtistInfoHelperImplTest {
     private val artistInfoHelperImpl = ArtistInfoHelperImpl()
-    private var cardInfo = CardImpl(
+    private var cardInfo = Card(
         "One of the most lasting and influential artistic movements of the 20th century " +
                 "was created with and for Black artists." +
                 "Why has their contribution been so overlooked?",

@@ -2,10 +2,7 @@ package ayds.newyork.songinfo.moredetails.controller
 
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModel
 import ayds.newyork.songinfo.moredetails.model.entities.Card
-import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
-import ayds.newyork.songinfo.moredetails.model.entities.EmptyCard.infoURL
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
-import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.ServiceProxy
 import ayds.newyork.songinfo.moredetails.view.MoreDetailsUiEvent
 import ayds.newyork.songinfo.moredetails.view.MoreDetailsUiState
 import ayds.newyork.songinfo.moredetails.view.MoreDetailsView
@@ -47,19 +44,19 @@ class MoreDetailsControllerImplTest {
     fun `on open article event should open indicated external link`() {
         val source: InfoSource = mockk()
         val cards: List<Card> = arrayListOf(
-            CardImpl(
+            Card(
                 description= "description",
                 infoURL="url0",
                 source = source,
                 sourceLogoUrl = "sourcerul0"
             ),
-            CardImpl(
+            Card(
                 description= "description",
                 infoURL="url1",
                 source = source,
                 sourceLogoUrl = "sourcerul1"
             ),
-            CardImpl(
+            Card(
                 description= "description",
                 infoURL="url2",
                 source = source,

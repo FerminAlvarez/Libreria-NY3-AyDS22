@@ -1,7 +1,6 @@
 package ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.wikipedia
 
 import ayds.newyork.songinfo.moredetails.model.entities.Card
-import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.ServiceProxy
 import ayds.winchester1.wikipedia.WikipediaArtistInfo
@@ -22,7 +21,7 @@ internal class WikipediaProxy(
     }
 
     private fun createArtistInfo(wikipediaArtistInfo: WikipediaArtistInfo) =
-        CardImpl(
+        Card(
             wikipediaArtistInfo.description,
             wikipediaArtistInfo.infoURL,
             InfoSource.WIKIPEDIA,

@@ -2,7 +2,7 @@ package ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.lastfm
 
 import ayds.lisboa.lastfmdata.lastfm.LastFMService
 import ayds.lisboa.lastfmdata.lastfm.entities.LastFMArtist
-import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
+import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import io.mockk.every
 import io.mockk.mockk
@@ -23,7 +23,7 @@ class LastFMProxyTest {
             sourceLogoUrl = "logo",
         )
 
-        val expected = CardImpl(
+        val expected = Card(
             description = "info",
             infoURL = "article",
             source = InfoSource.LAST_FM,

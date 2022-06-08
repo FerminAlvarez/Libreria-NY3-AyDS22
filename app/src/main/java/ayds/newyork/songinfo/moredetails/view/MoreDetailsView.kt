@@ -11,7 +11,6 @@ import ayds.newyork.songinfo.R
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModel
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModelInjector
 import ayds.newyork.songinfo.moredetails.model.entities.Card
-import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
 import ayds.newyork.songinfo.utils.UtilsInjector
 import ayds.newyork.songinfo.utils.navigation.NavigationUtils
 import ayds.observer.Observable
@@ -124,7 +123,7 @@ class MoreDetailsViewActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun updateArtistInfoUiState(artistInfo: Card) {
         uiState = uiState.copy(
-            cards = uiState.cards.plus(CardImpl(
+            cards = uiState.cards.plus(Card(
                 infoURL = artistInfo.infoURL,
                 description = artistInfoHelper.getArtistInfoText(
                     artistInfo,

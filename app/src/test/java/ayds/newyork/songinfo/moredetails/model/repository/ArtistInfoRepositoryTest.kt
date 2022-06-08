@@ -1,6 +1,6 @@
 package ayds.newyork.songinfo.moredetails.model.repository
 
-import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
+import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoBroker
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import ayds.newyork.songinfo.moredetails.model.repository.local.card.LocalStorage
@@ -31,8 +31,8 @@ class ArtistInfoRepositoryTest {
 
     @Test
     fun `given existing artist info by name should return artist info and mark it as local`() {
-        val artistsList = LinkedList<CardImpl>()
-        val artistInfo = CardImpl("artist info", "", InfoSource.EMPTY, "")
+        val artistsList = LinkedList<Card>()
+        val artistInfo = Card("artist info", "", InfoSource.EMPTY, "")
         artistsList.push(artistInfo)
 
         every { localStorage.getInfoByArtistName("name") } returns artistsList
@@ -45,8 +45,8 @@ class ArtistInfoRepositoryTest {
 
     @Test
     fun `given non existing artist info by name should get the info and store it`() {
-        val artistsList = LinkedList<CardImpl>()
-        val artistInfo = CardImpl("name", "artist info URL", InfoSource.EMPTY, "")
+        val artistsList = LinkedList<Card>()
+        val artistInfo = Card("name", "artist info URL", InfoSource.EMPTY, "")
         artistsList.push(artistInfo)
 
         every { localStorage.getInfoByArtistName("name") } returns emptyList()

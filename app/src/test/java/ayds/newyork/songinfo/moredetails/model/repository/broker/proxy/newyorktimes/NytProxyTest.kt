@@ -1,6 +1,6 @@
 package ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.newyorktimes
 
-import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
+import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import ayds.ny3.newyorktimes.NytArticleService
 import ayds.ny3.newyorktimes.NytArtistInfo
@@ -23,7 +23,7 @@ class NytProxyTest {
             nytLogo = "logo",
         )
 
-        val expected = CardImpl(
+        val expected = Card(
             description = "info",
             infoURL = "article",
             source = InfoSource.NEW_YORK_TIMES,
