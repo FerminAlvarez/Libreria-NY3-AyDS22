@@ -2,29 +2,23 @@ package ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.newyorkt
 
 import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
-import ayds.newyork.songinfo.moredetails.model.entities.EmptyCard
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.ServiceProxy
 import ayds.ny3.newyorktimes.NytArticleService
 import ayds.ny3.newyorktimes.NytArtistInfo
 
-
-internal class NytProxyImpl(
+internal class NytProxy(
     private val nytArticleService: NytArticleService
 ) : ServiceProxy {
 
-    override fun getInfo(artist: String): Card {
-        var artistCard: CardImpl? = null
-
-        try {
-            val serviceNytArtistInfo = nytArticleService.getArtistInfo(artist)
-            serviceNytArtistInfo?.let {
-                artistCard = createArtistInfo(it)
+    override fun getInfo(artist: String): Card? {
+        return try {
+            nytArticleService.getArtistInfo(artist)?.let {
+                createArtistInfo(it)
             }
         } catch (e: Exception) {
-            artistCard = null
+            null
         }
-        return artistCard ?: EmptyCard
     }
 
     private fun createArtistInfo(nytArtistInfo: NytArtistInfo) =

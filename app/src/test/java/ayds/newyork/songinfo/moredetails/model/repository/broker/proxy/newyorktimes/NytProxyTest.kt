@@ -13,7 +13,7 @@ import org.junit.Test
 class NytProxyTest {
     private val nytArticleService: NytArticleService = mockk()
 
-    private val nytProxy = NytProxyImpl(nytArticleService)
+    private val nytProxy = NytProxy(nytArticleService)
 
     @Test
     fun `given an artistName it should call the service`() {

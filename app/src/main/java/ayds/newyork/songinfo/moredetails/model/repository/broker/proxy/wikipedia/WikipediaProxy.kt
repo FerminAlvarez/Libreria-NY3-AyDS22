@@ -2,29 +2,23 @@ package ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.wikipedi
 
 import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
-import ayds.newyork.songinfo.moredetails.model.entities.EmptyCard
 import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.ServiceProxy
 import ayds.winchester1.wikipedia.WikipediaArtistInfo
 import ayds.winchester1.wikipedia.WikipediaService
 
-
-internal class WikipediaProxyImpl(
+internal class WikipediaProxy(
     private val wikipediaService: WikipediaService
 ) : ServiceProxy {
 
-    override fun getInfo(artist: String): Card {
-        var artistCard: CardImpl? = null
-
-        try {
-            val serviceArtistInfo = wikipediaService.getArtistInfo(artist)
-            serviceArtistInfo?.let {
-                artistCard = createArtistInfo(it)
+    override fun getInfo(artist: String): Card? {
+        return try {
+            wikipediaService.getArtistInfo(artist)?.let {
+                createArtistInfo(it)
             }
         } catch (e: Exception) {
-            artistCard = null
+            null
         }
-        return artistCard ?: EmptyCard
     }
 
     private fun createArtistInfo(wikipediaArtistInfo: WikipediaArtistInfo) =
