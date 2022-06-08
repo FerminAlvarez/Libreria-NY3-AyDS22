@@ -6,6 +6,7 @@ import ayds.winchester1.wikipedia.WikipediaArtistInfo
 import ayds.winchester1.wikipedia.WikipediaService
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -34,5 +35,6 @@ class WikipediaProxyTest {
         val result = wikipediaProxy.getInfo("name")
 
         assertEquals(expected, result)
+        verify { wikipediaService.getArtistInfo("name") }
     }
 }

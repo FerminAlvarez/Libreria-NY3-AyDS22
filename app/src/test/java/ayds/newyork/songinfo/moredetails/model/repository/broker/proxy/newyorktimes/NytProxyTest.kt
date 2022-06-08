@@ -6,6 +6,7 @@ import ayds.ny3.newyorktimes.NytArticleService
 import ayds.ny3.newyorktimes.NytArtistInfo
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -35,5 +36,6 @@ class NytProxyTest {
         val result = nytProxy.getInfo("name")
 
         assertEquals(expected, result)
+        verify { nytArticleService.getArtistInfo("name") }
     }
 }

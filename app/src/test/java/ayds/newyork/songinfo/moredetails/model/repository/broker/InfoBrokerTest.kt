@@ -4,6 +4,8 @@ import ayds.newyork.songinfo.moredetails.model.entities.CardImpl
 import ayds.newyork.songinfo.moredetails.model.repository.broker.proxy.ServiceProxy
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
+import io.mockk.verifySequence
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -31,5 +33,10 @@ class InfoBrokerTest {
         val result = infoBroker.getInfoByArtistName("name")
 
         assertEquals(infoList, result)
+        verifySequence {
+            proxy.getInfo("name")
+            proxy.getInfo("name")
+            proxy.getInfo("name")
+        }
     }
 }
