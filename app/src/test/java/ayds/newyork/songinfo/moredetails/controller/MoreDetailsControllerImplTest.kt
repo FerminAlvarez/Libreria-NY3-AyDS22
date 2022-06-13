@@ -1,6 +1,8 @@
 package ayds.newyork.songinfo.moredetails.controller
 
 import ayds.newyork.songinfo.moredetails.model.MoreDetailsModel
+import ayds.newyork.songinfo.moredetails.model.entities.Card
+import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoSource
 import ayds.newyork.songinfo.moredetails.view.MoreDetailsUiEvent
 import ayds.newyork.songinfo.moredetails.view.MoreDetailsUiState
 import ayds.newyork.songinfo.moredetails.view.MoreDetailsView
@@ -33,17 +35,40 @@ class MoreDetailsControllerImplTest {
     fun `on search event should search artist info`() {
         every { moreDetailsView.uiState } returns MoreDetailsUiState(artistName = "name")
 
-        onActionSubject.notify(MoreDetailsUiEvent.SearchNytInfo)
+        onActionSubject.notify(MoreDetailsUiEvent.SearchInfo)
 
         verify { moreDetailsModel.getInfoByArtistName("name") }
     }
 
     @Test
-    fun `on open article event should open external link`() {
-        every { moreDetailsView.uiState } returns MoreDetailsUiState(articleUrl = "url")
+    fun `on open article event should open indicated external link`() {
+        val source: InfoSource = mockk()
+        val cards: List<Card> = arrayListOf(
+            Card(
+                description= "description",
+                infoURL="url0",
+                source = source,
+                sourceLogoUrl = "sourcerul0"
+            ),
+            Card(
+                description= "description",
+                infoURL="url1",
+                source = source,
+                sourceLogoUrl = "sourcerul1"
+            ),
+            Card(
+                description= "description",
+                infoURL="url2",
+                source = source,
+                sourceLogoUrl = "sourcerul2"
+            ),
+        )
+
+        every { moreDetailsView.uiState.cards } returns cards
+        MoreDetailsUiEvent.OpenArticleUrl.uiCardIndex = 1
 
         onActionSubject.notify(MoreDetailsUiEvent.OpenArticleUrl)
 
-        verify { moreDetailsView.openExternalLink("url") }
+        verify { moreDetailsView.openExternalLink("url1") }
     }
 }

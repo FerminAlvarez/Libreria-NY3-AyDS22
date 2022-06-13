@@ -1,6 +1,6 @@
 package ayds.newyork.songinfo.moredetails.model
 
-import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
+import ayds.newyork.songinfo.moredetails.model.entities.Card
 import ayds.newyork.songinfo.moredetails.model.repository.ArtistInfoRepository
 import io.mockk.every
 import io.mockk.mockk
@@ -15,9 +15,9 @@ class MoreDetailsModelTest {
 
     @Test
     fun `given an artistName it should notify the result`() {
-        val artistInfo: ArtistInfo = mockk()
+        val artistInfo: List<Card> = mockk()
         every { repository.getInfoByArtistName("test") } returns artistInfo
-        val artistTester: (ArtistInfo) -> Unit = mockk(relaxed = true)
+        val artistTester: (List<Card>) -> Unit = mockk(relaxed = true)
         moreDetailsModel.artistObservable.subscribe {
             artistTester(it)
         }

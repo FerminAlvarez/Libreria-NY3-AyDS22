@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "ayds.apolo"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 31
         versionCode 1
         versionName "1.0"
@@ -35,6 +35,9 @@ android {
 dependencies {
 
     implementation project(":observer")
+    implementation project(":newyorkdata")
+    implementation project(":lastfmdata")
+    implementation project(":wikipediadata")
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'

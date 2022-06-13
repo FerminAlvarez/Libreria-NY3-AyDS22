@@ -1,43 +1,41 @@
 package ayds.newyork.songinfo.moredetails.model.repository
 
-import ayds.newyork.songinfo.moredetails.model.entities.ArtistInfo
-import ayds.newyork.songinfo.moredetails.model.entities.EmptyArtistInfo
-import ayds.newyork.songinfo.moredetails.model.entities.NytArtistInfo
-import ayds.newyork.songinfo.moredetails.model.repository.external.nyt.NytArticleService
-import ayds.newyork.songinfo.moredetails.model.repository.local.nyt.NytLocalStorage
-import java.lang.Exception
+import ayds.newyork.songinfo.moredetails.model.entities.Card
+import ayds.newyork.songinfo.moredetails.model.repository.broker.InfoBroker
+import ayds.newyork.songinfo.moredetails.model.repository.local.card.LocalStorage
 
 interface ArtistInfoRepository {
-    fun getInfoByArtistName(artist: String): ArtistInfo
+    fun getInfoByArtistName(artist: String): List<Card>
 }
 
 internal class ArtistInfoRepositoryImpl(
-    private val nytLocalStorage: NytLocalStorage,
-    private val nytArticleService: NytArticleService
+    private val localStorage: LocalStorage,
+    private val infoBroker: InfoBroker
 ) : ArtistInfoRepository {
 
 
-    override fun getInfoByArtistName(artist: String): ArtistInfo {
-        var artistInfo = nytLocalStorage.getInfoByArtistName(artist)
+    override fun getInfoByArtistName(artist: String): List<Card> {
+        var infoList = localStorage.getInfoByArtistName(artist)
 
         when {
-            artistInfo != null -> markArticleAsLocal(artistInfo)
+            infoList.isNotEmpty() -> markArticleAsLocal(infoList)
             else -> {
-                try {
-                    artistInfo = nytArticleService.getArtistInfo(artist)
+                infoList = infoBroker.getInfoByArtistName(artist)
 
-                    artistInfo?.let {
-                        nytLocalStorage.saveArtist(it)
-                    }
-                } catch (e: Exception) {
-                    artistInfo = null
+                if (infoList.isNotEmpty()) {
+                    saveArtists(infoList, artist)
                 }
+
             }
         }
-        return artistInfo ?: EmptyArtistInfo
+        return infoList
     }
 
-    private fun markArticleAsLocal(article: NytArtistInfo) {
-        article.isLocallyStored = true
+    private fun markArticleAsLocal(articles: List<Card>) {
+        articles.map { it.isLocallyStored = true }
+    }
+
+    private fun saveArtists(articles: List<Card>, artist: String) {
+        articles.map { localStorage.saveArtist(it, artist) }
     }
 }

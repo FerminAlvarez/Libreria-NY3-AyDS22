@@ -3,7 +3,6 @@ package ayds.newyork.songinfo.utils.navigation
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 
 interface NavigationUtils {
     fun openExternalUrl(activity: Activity, url: String)

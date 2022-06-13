@@ -1,13 +1,14 @@
 package ayds.newyork.songinfo.moredetails.view
 
+import ayds.newyork.songinfo.moredetails.model.entities.Card
+
 data class MoreDetailsUiState(
     val artistName: String = "",
-    val articleUrl: String = "",
-    val artistInfo: String = "",
-    val logoUrl: String = LOGO_NYT,
+    val cards: List<Card> = emptyList(),
+    val sourceLogoUrl: String = DEFAULT_LOGO,
 ) {
     companion object {
-        private const val LOGO_NYT =
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU"
+        const val DEFAULT_LOGO =
+            "https://sourceless.io/wp-content/uploads/2021/05/sourceless-blockchain-logo-long-version.png"
     }
 }
